@@ -1,17 +1,37 @@
+import { GLUtil, gl } from './gl'
+
+/**
+ * The core engine class
+ */
 class Engine {
-  private _count: number = 0
+  private _canvas?: HTMLCanvasElement
 
-  constructor() {
-    this._count = 0
-  }
+  /**
+   * Create a new engine
+   */
+  constructor() {}
 
+  /**
+   * Start up the engine
+   */
   start() {
+    this._canvas = GLUtil.init()
+
+    gl?.clearColor(0.0, 0.0, 0.0, 1.0)
+
     this.loop()
   }
 
-  loop() {
-    this._count++
-    console.log(this._count)
+  /**
+   * Resize the canvas to fit the window
+   */
+  resize() {
+    this._canvas?.setAttribute('width', `${window.innerWidth}`)
+    this._canvas?.setAttribute('height', `${window.innerHeight}`)
+  }
+
+  private loop() {
+    gl?.clear(gl.COLOR_BUFFER_BIT)
     requestAnimationFrame(this.loop.bind(this))
   }
 }

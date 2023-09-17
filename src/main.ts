@@ -1,6 +1,11 @@
 import Engine from './engine'
 
+const engine = new Engine()
+
 window.onload = () => {
-  const e = new Engine()
-  e.start()
+  engine.start()
+}
+
+window.onresize = () => {
+  engine.resize()
 }
