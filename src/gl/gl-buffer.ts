@@ -1,27 +1,24 @@
 import { gl } from './gl'
 
 /**
- * Represents the information needed for a WebGL buffer attribute
+ * Holds the specification for an attribute within a WebGL buffer.
+ * @class
  */
 export class AttributeInfo {
-  /**
-   * The location of the attribute.
-   */
+  /** Specifies the location of the attribute in the buffer. */
   location: number
-  /**
-   * The size (number of elements) in this attribute (i.e. Vector3 = 3).
-   */
+
+  /** Defines the number of elements within this attribute. For example, a Vector3 would have a size of 3. */
   size: number
-  /**
-   * The number of elements fron the beginning of the buffer.
-   */
+
+  /** Specifies how many elements the attribute is offset from the start of the buffer. */
   offset: number
 
   /**
-   *
-   * @param location The location of the attribute.
-   * @param size The size (number of elements) in this attribute (i.e. Vector3 = 3).
-   * @param offset The number of elements fron the beginning of the buffer.
+   * Creates an attribute information instance.
+   * @param location - The location of the attribute.
+   * @param size - The number of elements in the attribute.
+   * @param offset - The offset of the attribute from the beginning of the buffer.
    */
   constructor(location: number, size: number, offset: number) {
     this.location = location
@@ -30,6 +27,10 @@ export class AttributeInfo {
   }
 }
 
+/**
+ * Encapsulates a WebGL buffer, providing utility for setting up and manipulating graphics data.
+ * @class
+ */
 export class GLBuffer {
   private _hasAttribLocation: boolean = false
   private _elementSize: number
@@ -43,11 +44,11 @@ export class GLBuffer {
   private attributes: AttributeInfo[] = []
 
   /**
-   * Creates a new WebGL buffer
-   * @param elementSize The size of each element in the buffer
-   * @param dataType The data type of the buffer. Defaults to gl.FLOAT
-   * @param targetBufferType The buffer target type. Can be either gl.ARRAY_BUFFER or gl.ELEMENT_ARRAY_BUFFER Defaults to gl.ARRAY_BUFFER
-   * @param mode The draw mode. (i.e. gl.TRIANGLES or gl.LINES) Defaults to gl.TRIANGLES
+   * Initializes a new WebGL buffer.
+   * @param elementSize - The number of components per vertex attribute.
+   * @param dataType - The data type of elements for the buffer (default: gl.FLOAT).
+   * @param targetBufferType - Specifies the buffer type (default: gl.ARRAY_BUFFER).
+   * @param mode - Defines the rendering primitive mode (default: gl.TRIANGLES).
    */
   constructor(
     elementSize: number,
@@ -64,16 +65,14 @@ export class GLBuffer {
     this._buffer = gl.createBuffer() as WebGLBuffer
   }
 
-  /**
-   * Deletes the buffer.
-   */
+  /** Deletes this buffer from the GPU memory. */
   destroy() {
     gl.deleteBuffer(this._buffer)
   }
 
   /**
-   * Binds this buffer.
-   * @param is_normalized Indicated if the data should be normalized. Defaults to false.
+   * Binds this buffer, enabling it for use in subsequent WebGL calls.
+   * @param is_normalized - Indicates whether the data should be normalized (default: false).
    */
   bind(is_normalized: boolean = false) {
     gl.bindBuffer(this._targetBufferType, this._buffer)
@@ -93,9 +92,7 @@ export class GLBuffer {
     }
   }
 
-  /**
-   * Unbinds this buffer.
-   */
+  /** Detaches this buffer from the current WebGL context. */
   unbind() {
     for (const a of this.attributes) {
       gl.disableVertexAttribArray(a.location)
@@ -105,8 +102,8 @@ export class GLBuffer {
   }
 
   /**
-   * Adds an attribute to this buffer.
-   * @param info The attribute info to add.
+   * Appends an attribute specification to this buffer.
+   * @param info - The attribute specification to add.
    */
   addAttributeLocation(info: AttributeInfo) {
     this._hasAttribLocation = true
@@ -114,16 +111,14 @@ export class GLBuffer {
   }
 
   /**
-   * Adds data to this buffer.
-   * @param data The data to add.
+   * Appends data to this buffer's data store.
+   * @param data - The array of data elements to append.
    */
   pushBackData(data: number[]) {
     this._data.push(...data)
   }
 
-  /**
-   * Uploads this buffer's data to the GPU.
-   */
+  /** Uploads the buffer's data to the GPU for rendering. */
   upload() {
     gl.bindBuffer(this._targetBufferType, this._buffer)
 
@@ -157,9 +152,7 @@ export class GLBuffer {
     gl.bufferData(this._targetBufferType, bufferData, gl.STATIC_DRAW)
   }
 
-  /**
-   * Draws this buffer.
-   */
+  /** Renders the content of the buffer. */
   draw() {
     if (this._targetBufferType === gl.ARRAY_BUFFER) {
       gl.drawArrays(this._mode, 0, this._data.length / this._elementSize)

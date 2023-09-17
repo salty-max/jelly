@@ -1,7 +1,8 @@
 import { GLUtil, gl } from '../gl/gl'
-import { AttributeInfo, GLBuffer } from '../gl/gl-buffer'
 import { Shader } from '../gl/shader'
+import { Sprite } from '../graphics/sprite'
 import { hextoGl } from '../util/util'
+import { Mat4 } from './math/mat4'
 
 /**
  * The core engine class
@@ -9,7 +10,9 @@ import { hextoGl } from '../util/util'
 export class Engine {
   private _canvas!: HTMLCanvasElement
   private _shader!: Shader
-  private _buffer!: GLBuffer
+  private _projection!: Mat4
+
+  private _sprite!: Sprite
 
   /**
    * Create a new engine
@@ -21,13 +24,18 @@ export class Engine {
    */
   start() {
     this._canvas = GLUtil.init()
+    this._canvas.width = 512
+    this._canvas.height = 512
 
     gl.clearColor(...hextoGl('#1D2B53FF'))
 
     this.loadShaders()
     this._shader.use()
 
-    this.createBuffer()
+    // Load
+    this._sprite = new Sprite('test', 200, 200)
+    this._sprite.load()
+
     this.resize()
     this.loop()
   }
@@ -36,8 +44,23 @@ export class Engine {
    * Resize the canvas to fit the window
    */
   resize() {
-    this._canvas.setAttribute('width', `${window.innerWidth}`)
-    this._canvas.setAttribute('height', `${window.innerHeight}`)
+    this._canvas.width =
+      this._canvas.width > window.innerWidth
+        ? window.innerWidth
+        : this._canvas.width
+    this._canvas.height =
+      this._canvas.height > window.innerHeight
+        ? window.innerHeight
+        : this._canvas.height
+
+    this._projection = Mat4.orthographic(
+      0,
+      this._canvas.width,
+      0,
+      this._canvas.height,
+      -100,
+      100,
+    )
 
     gl.viewport(0, 0, this._canvas.width, this._canvas.height)
   }
@@ -46,43 +69,32 @@ export class Engine {
     gl.clear(gl.COLOR_BUFFER_BIT)
 
     // Set uniforms
-    const colorPosition = this._shader.getUniformLocation('u_color')
-    gl.uniform4fv(colorPosition, hextoGl('#29ADFFFF'))
+    const colorLocation = this._shader.getUniformLocation('u_color')
+    gl.uniform4fv(colorLocation, hextoGl('#29ADFFFF'))
 
-    this._buffer.bind()
-    this._buffer.draw()
+    const projLocation = this._shader.getUniformLocation('u_projection')
+    gl.uniformMatrix4fv(projLocation, false, this._projection.data)
 
-    requestAnimationFrame(this.loop.bind(this))
-  }
-
-  private createBuffer() {
-    const positionAttrib = new AttributeInfo(
-      this._shader.getAttribLocation('a_position'),
-      3,
-      0,
+    const modelLocation = this._shader.getUniformLocation('u_model')
+    gl.uniformMatrix4fv(
+      modelLocation,
+      false,
+      new Float32Array(Mat4.translation(this._sprite.position).data),
     )
 
-    // prettier-ignore
-    const vertices: number[] = [
-      // x, y, z
-      0, 0, 0,
-      0, 0.5, 0,
-      0.5, 0.5, 0,
-    ]
+    this._sprite.draw()
 
-    this._buffer = new GLBuffer(3)
-    this._buffer.addAttributeLocation(positionAttrib)
-    this._buffer.pushBackData(vertices)
-    this._buffer.upload()
-    this._buffer.unbind()
+    requestAnimationFrame(this.loop.bind(this))
   }
 
   private loadShaders() {
     const vertexShaderSource = `
       attribute vec3 a_position;
+      uniform mat4 u_projection;
+      uniform mat4 u_model;
 
       void main() {
-        gl_Position = vec4(a_position, 1.0);
+        gl_Position = u_projection * u_model * vec4(a_position, 1.0);
       }
     `
 
