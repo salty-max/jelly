@@ -1,7 +1,7 @@
 /**
  * The WebGL rendering context
  */
-export let gl: WebGLRenderingContext | null = null
+export let gl: WebGLRenderingContext
 
 /**
  * A utility class for WebGL
@@ -25,13 +25,15 @@ export class GLUtil {
       document.body.appendChild(canvas)
     }
 
-    gl = canvas.getContext('webgl')
+    const ctx = canvas.getContext('webgl')
 
-    if (!gl) {
+    if (!ctx) {
       throw new Error(
         'Unable to initialize WebGL. Your browser or machine may not support it.',
       )
     }
+
+    gl = ctx as WebGLRenderingContext
 
     return canvas
   }
