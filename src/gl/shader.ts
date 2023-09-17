@@ -1,11 +1,21 @@
 import { gl } from './gl'
 
+export type ShaderAttribute = {
+  [name: string]: number
+}
+
+export type ShaderUniform = {
+  [name: string]: WebGLUniformLocation
+}
+
 /**
  * Represents a WebGL shader.
  */
 export class Shader {
   private _name: string
   private _program!: WebGLProgram
+  private _attributes: ShaderAttribute = {}
+  private _uniforms: ShaderUniform = {}
 
   /**
    * Creates a new shader.
@@ -19,6 +29,8 @@ export class Shader {
     const fragmentShader = this.loadShader(fragmentSource, gl.FRAGMENT_SHADER)
 
     this.createProgram(vertexShader, fragmentShader)
+    this.detectAttributes()
+    this.detectUniforms()
   }
 
   /**
@@ -26,6 +38,34 @@ export class Shader {
    */
   get name(): string {
     return this._name
+  }
+
+  /**
+   * Gets the location of an attribute.
+   * @param name The name of the attribute whose location to retrieve.
+   * @returns The location of the attribute.
+   */
+  getAttribLocation(name: string): number {
+    const loc = this._attributes[name]
+    if (loc === undefined) {
+      throw new Error(`Attribute ${name} not found in shader ${this._name}`)
+    }
+
+    return loc
+  }
+
+  /**
+   * Gets the location of an attribute.
+   * @param name The name of the attribute whose location to retrieve.
+   * @returns The location of the attribute.
+   */
+  getUniformLocation(name: string): WebGLUniformLocation {
+    const loc = this._uniforms[name]
+    if (loc === undefined) {
+      throw new Error(`Uniform ${name} not found in shader ${this._name}`)
+    }
+
+    return loc
   }
 
   /**
@@ -67,6 +107,48 @@ export class Shader {
     const error = gl.getProgramInfoLog(this._program)
     if (error) {
       throw new Error(`Error linking shader ${this._name}: ${error}`)
+    }
+  }
+
+  private detectAttributes() {
+    const attribCount: number = gl.getProgramParameter(
+      this._program,
+      gl.ACTIVE_ATTRIBUTES,
+    )
+
+    for (let i = 0; i < attribCount; i++) {
+      const info = gl.getActiveAttrib(this._program, i)
+      if (!info) {
+        throw new Error(`Error getting attribute ${i} for shader ${this._name}`)
+      }
+
+      this._attributes[info.name] = gl.getAttribLocation(
+        this._program,
+        info.name,
+      )
+    }
+  }
+
+  private detectUniforms() {
+    const uniformCount: number = gl.getProgramParameter(
+      this._program,
+      gl.ACTIVE_UNIFORMS,
+    )
+
+    for (let i = 0; i < uniformCount; i++) {
+      const info = gl.getActiveUniform(this._program, i)
+      if (!info) {
+        throw new Error(`Error getting uniform ${i} for shader ${this._name}`)
+      }
+
+      const loc = gl.getUniformLocation(this._program, info.name)
+      if (!loc) {
+        throw new Error(
+          `Error getting uniform location for ${info.name} in shader ${this._name}`,
+        )
+      }
+
+      this._uniforms[info.name] = loc
     }
   }
 }

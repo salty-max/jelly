@@ -1,5 +1,7 @@
 import { GLUtil, gl } from '../gl/gl'
+import { AttributeInfo, GLBuffer } from '../gl/gl-buffer'
 import { Shader } from '../gl/shader'
+import { hextoGl } from '../util/util'
 
 /**
  * The core engine class
@@ -7,7 +9,7 @@ import { Shader } from '../gl/shader'
 export class Engine {
   private _canvas!: HTMLCanvasElement
   private _shader!: Shader
-  private _buffer!: WebGLBuffer
+  private _buffer!: GLBuffer
 
   /**
    * Create a new engine
@@ -20,7 +22,7 @@ export class Engine {
   start() {
     this._canvas = GLUtil.init()
 
-    gl.clearColor(0.0, 0.0, 0.0, 1.0)
+    gl.clearColor(...hextoGl('#1D2B53FF'))
 
     this.loadShaders()
     this._shader.use()
@@ -43,22 +45,22 @@ export class Engine {
   private loop() {
     gl.clear(gl.COLOR_BUFFER_BIT)
 
-    gl.bindBuffer(gl.ARRAY_BUFFER, this._buffer)
-    gl.vertexAttribPointer(0, 3, gl.FLOAT, false, 0, 0)
-    gl.enableVertexAttribArray(0)
-    gl.drawArrays(gl.TRIANGLES, 0, 3)
-    gl.disableVertexAttribArray(0)
-    gl.bindBuffer(gl.ARRAY_BUFFER, null)
+    // Set uniforms
+    const colorPosition = this._shader.getUniformLocation('u_color')
+    gl.uniform4fv(colorPosition, hextoGl('#29ADFFFF'))
+
+    this._buffer.bind()
+    this._buffer.draw()
 
     requestAnimationFrame(this.loop.bind(this))
   }
 
   private createBuffer() {
-    const buf = gl.createBuffer()
-    if (!buf) {
-      throw new Error('Error creating buffer')
-    }
-    this._buffer = buf
+    const positionAttrib = new AttributeInfo(
+      this._shader.getAttribLocation('a_position'),
+      3,
+      0,
+    )
 
     // prettier-ignore
     const vertices: number[] = [
@@ -68,12 +70,11 @@ export class Engine {
       0.5, 0.5, 0,
     ]
 
-    gl.bindBuffer(gl.ARRAY_BUFFER, this._buffer)
-    gl.vertexAttribPointer(0, 3, gl.FLOAT, false, 0, 0)
-    gl.enableVertexAttribArray(0)
-    gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(vertices), gl.STATIC_DRAW)
-    gl.bindBuffer(gl.ARRAY_BUFFER, null)
-    gl.disableVertexAttribArray(0)
+    this._buffer = new GLBuffer(3)
+    this._buffer.addAttributeLocation(positionAttrib)
+    this._buffer.pushBackData(vertices)
+    this._buffer.upload()
+    this._buffer.unbind()
   }
 
   private loadShaders() {
@@ -88,8 +89,10 @@ export class Engine {
     const fragmentShaderSource = `
       precision mediump float;
 
+      uniform vec4 u_color;
+
       void main() {
-        gl_FragColor = vec4(1.0);
+        gl_FragColor = u_color;
       }
     `
 
