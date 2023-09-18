@@ -1,4 +1,6 @@
 import { GLUtil, gl } from '../gl/gl'
+import { Material } from '../graphics/material'
+import { MaterialManager } from '../graphics/material-manager'
 import { Sprite } from '../graphics/sprite'
 import { BasicShader } from '../shaders/basic-shader'
 import { hextoGl } from '../util/util'
@@ -34,8 +36,13 @@ export class Engine {
     this._basicShader = new BasicShader()
     this._basicShader.use()
 
+    // Load materials
+    MaterialManager.registerMaterial(
+      new Material('firefox', '../../resources/textures/firefox.gif'),
+    )
+
     // Load
-    this._sprite = new Sprite('test', '../../resources/textures/firefox.gif')
+    this._sprite = new Sprite('test', 'firefox')
     this._sprite.load()
 
     this.resize()

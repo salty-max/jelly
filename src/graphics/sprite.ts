@@ -4,9 +4,8 @@ import { AttributeInfo } from '../gl/attribute'
 import { gl } from '../gl/gl'
 import { GLBuffer } from '../gl/gl-buffer'
 import { Shader } from '../gl/shader'
-import { hextoGl } from '../util/util'
-import { Texture } from './texture'
-import { TextureManager } from './texture-manager'
+import { Material } from './material'
+import { MaterialManager } from './material-manager'
 
 /**
  * Encapsulates the concept of a sprite, a two-dimensional image or animation integrated into a larger scene.
@@ -19,8 +18,8 @@ export class Sprite {
   private _width: number
   private _height: number
   private _buffer!: GLBuffer
-  private _textureName: string
-  private _texture: Texture
+  private _materialName: string | undefined
+  private _material: Material | undefined
 
   position: Vec3 = Vec3.zero()
 
@@ -28,21 +27,21 @@ export class Sprite {
    * Constructs a new sprite with the given name and dimensions.
    *
    * @param {string} name - A unique identifier for the sprite.
-   * @param {string} textureName - The name of the texture to use for the sprite.
+   * @param {string} materialName - The name of the material to use for the sprite.
    * @param {number} width - The width of the sprite in pixels.
    * @param {number} height - The height of the sprite in pixels.
    */
   constructor(
     name: string,
-    textureName: string,
+    materialName: string,
     width: number = 100,
     height: number = 100,
   ) {
     this._name = name
     this._width = width
     this._height = height
-    this._textureName = textureName
-    this._texture = TextureManager.getTexture(this._textureName)
+    this._materialName = materialName
+    this._material = MaterialManager.getMaterial(this._materialName)
   }
 
   /**
@@ -54,7 +53,9 @@ export class Sprite {
 
   destroy() {
     this._buffer.destroy()
-    TextureManager.releaseTexture(this._textureName)
+    MaterialManager.releaseMaterial(this._materialName!)
+    this._material = undefined
+    this._materialName = undefined
   }
 
   /**
@@ -106,13 +107,17 @@ export class Sprite {
       new Float32Array(Mat4.translation(this.position).data),
     )
 
-    // Set uniforms
-    const tintLocation = shader.getUniformLocation('u_tint')
-    gl.uniform4fv(tintLocation, hextoGl('#FFFFFFFF'))
+    if (this._material) {
+      // Set uniforms
+      const tintLocation = shader.getUniformLocation('u_tint')
+      gl.uniform4fv(tintLocation, this._material.tint.toFloat32Array())
 
-    this._texture.activateAndBind(0)
-    const diffuseLocation = shader.getUniformLocation('u_diffuse')
-    gl.uniform1i(diffuseLocation, 0)
+      if (this._material?.diffuseTexture) {
+        this._material.diffuseTexture.activateAndBind(0)
+        const diffuseLocation = shader.getUniformLocation('u_diffuse')
+        gl.uniform1i(diffuseLocation, 0)
+      }
+    }
 
     this._buffer.bind()
     this._buffer.draw()
