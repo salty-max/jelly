@@ -1,6 +1,7 @@
 import { Shader } from '../../gl/shader'
 import { Mat4 } from '../math/mat4'
 import { Transform } from '../math/transform'
+import { Scene } from './scene'
 
 /**
  * Represents an node in the world.
@@ -28,6 +29,10 @@ export class Node {
    */
   private _parent: Node | undefined
   /**
+   * The scene that this node belongs to.
+   */
+  private _scene: Scene | undefined
+  /**
    * Whether or not this node has been loaded.
    */
   private _isLoaded: boolean = false
@@ -45,9 +50,10 @@ export class Node {
    * @param id The unique ID of the node.
    * @param name The name of the node.
    */
-  constructor(id: number, name: string) {
+  constructor(id: number, name: string, scene?: Scene) {
     this._id = id
     this.name = name
+    this._scene = scene
   }
 
   /**
@@ -66,7 +72,7 @@ export class Node {
    * Returns whether or not the node has been loaded.
    */
   get isLoaded(): boolean {
-    return this.isLoaded
+    return this._isLoaded
   }
   /**
    * Retrieves the world transformation matrix of the node.
@@ -82,6 +88,9 @@ export class Node {
   addChild(node: Node) {
     node._parent = this
     this._children.push(node)
+    if (this._scene) {
+      node.onAdded(this._scene)
+    }
   }
 
   /**
@@ -116,6 +125,9 @@ export class Node {
     return undefined
   }
 
+  /**
+   * Loads the node and its children.
+   */
   load() {
     this._isLoaded = true
     for (const child of this._children) {
@@ -123,15 +135,31 @@ export class Node {
     }
   }
 
+  /**
+   * Updates the node and its children.
+   * @param time The time since the last update in milliseconds.
+   */
   update(time: number) {
     for (const child of this._children) {
       child.update(time)
     }
   }
 
+  /**
+   * Draws the node and its children.
+   * @param shader The shader to use to draw the node.
+   */
   draw(shader: Shader) {
     for (const child of this._children) {
       child.draw(shader)
     }
+  }
+
+  /**
+   * Called when the node is added to a scene.
+   * @param scene The scene that the node was added to.
+   */
+  protected onAdded(scene: Scene) {
+    this._scene = scene
   }
 }
