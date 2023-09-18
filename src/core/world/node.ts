@@ -39,7 +39,7 @@ export class Node {
   /**
    * The local transformation matrix of this node.
    */
-  private _localMatrix: Mat4 = Mat4.identity()
+  // private _localMatrix: Mat4 = Mat4.identity()
   /**
    * The world transformation matrix of this node.
    */
