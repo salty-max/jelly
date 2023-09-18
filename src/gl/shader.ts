@@ -7,7 +7,7 @@ export type ShaderUniform = Record<string, WebGLUniformLocation>
 /**
  * Represents a WebGL shader.
  */
-export class Shader {
+export abstract class Shader {
   private _name: string
   private _program!: WebGLProgram
   private _attributes: ShaderAttribute = {}
@@ -16,17 +16,9 @@ export class Shader {
   /**
    * Creates a new shader.
    * @param name The name of the shader.
-   * @param vertexSource The source of the vertex shader.
-   * @param fragmentSource The source of the fragment shader.
    */
-  constructor(name: string, vertexSource: string, fragmentSource: string) {
+  constructor(name: string) {
     this._name = name
-    const vertexShader = this.loadShader(vertexSource, gl.VERTEX_SHADER)
-    const fragmentShader = this.loadShader(fragmentSource, gl.FRAGMENT_SHADER)
-
-    this.createProgram(vertexShader, fragmentShader)
-    this.detectAttributes()
-    this.detectUniforms()
   }
 
   /**
@@ -69,6 +61,20 @@ export class Shader {
    */
   use() {
     gl.useProgram(this._program)
+  }
+
+  /**
+   * Loads the shader.
+   * @param vertexSource The vertex shader source code.
+   * @param fragmentSource The fragment shader source code.
+   */
+  protected load(vertexSource: string, fragmentSource: string) {
+    const vertexShader = this.loadShader(vertexSource, gl.VERTEX_SHADER)
+    const fragmentShader = this.loadShader(fragmentSource, gl.FRAGMENT_SHADER)
+
+    this.createProgram(vertexShader, fragmentShader)
+    this.detectAttributes()
+    this.detectUniforms()
   }
 
   private loadShader(source: string, type: number): WebGLShader {

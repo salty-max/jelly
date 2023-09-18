@@ -1,8 +1,10 @@
+import { Mat4 } from '../core/math/mat4'
 import { Vec3 } from '../core/math/vec3'
 import { AttributeInfo } from '../gl/attribute'
 import { gl } from '../gl/gl'
 import { GLBuffer } from '../gl/gl-buffer'
 import { Shader } from '../gl/shader'
+import { hextoGl } from '../util/util'
 import { Texture } from './texture'
 import { TextureManager } from './texture-manager'
 
@@ -97,6 +99,17 @@ export class Sprite {
    * This method binds the underlying buffer and triggers the drawing process, rendering the sprite.
    */
   draw(shader: Shader) {
+    const modelLocation = shader.getUniformLocation('u_model')
+    gl.uniformMatrix4fv(
+      modelLocation,
+      false,
+      new Float32Array(Mat4.translation(this.position).data),
+    )
+
+    // Set uniforms
+    const tintLocation = shader.getUniformLocation('u_tint')
+    gl.uniform4fv(tintLocation, hextoGl('#FFFFFFFF'))
+
     this._texture.activateAndBind(0)
     const diffuseLocation = shader.getUniformLocation('u_diffuse')
     gl.uniform1i(diffuseLocation, 0)
