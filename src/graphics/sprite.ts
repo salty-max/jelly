@@ -21,7 +21,7 @@ export class Sprite {
   private _materialName: string | undefined
   private _material: Material | undefined
 
-  position: Vec3 = Vec3.zero()
+  position: Vec3 = Vec3.zero
 
   /**
    * Constructs a new sprite with the given name and dimensions.

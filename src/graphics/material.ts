@@ -11,7 +11,7 @@ export class Material {
   constructor(
     name: string,
     diffuseTextureName: string,
-    tint: Color = Color.white(),
+    tint: Color = Color.white,
   ) {
     this._name = name
     this._diffuseTextureName = diffuseTextureName

@@ -60,31 +60,31 @@ export class Color {
     return new Float32Array(this.toFloatArray())
   }
 
-  static black(): Color {
+  static get black(): Color {
     return new Color(0, 0, 0, 255)
   }
-  static white(): Color {
+  static get white(): Color {
     return new Color(255, 255, 255, 255)
   }
-  static red(): Color {
+  static get red(): Color {
     return new Color(255, 0, 0, 255)
   }
-  static green(): Color {
+  static get green(): Color {
     return new Color(0, 255, 0, 255)
   }
-  static blue(): Color {
+  static get blue(): Color {
     return new Color(0, 0, 255, 255)
   }
-  static yellow(): Color {
+  static get yellow(): Color {
     return new Color(255, 255, 0, 255)
   }
-  static cyan(): Color {
+  static get cyan(): Color {
     return new Color(0, 255, 255, 255)
   }
-  static magenta(): Color {
+  static get magenta(): Color {
     return new Color(255, 0, 255, 255)
   }
-  static gray(): Color {
+  static get gray(): Color {
     return new Color(128, 128, 128, 255)
   }
 }

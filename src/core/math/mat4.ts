@@ -110,4 +110,86 @@ export class Mat4 {
 
     return mat
   }
+
+  /**
+   * Constructs a rotation matrix based on the specified angle.
+   *
+   * A rotation matrix is used to rotate a vector by a given angle.
+   *
+   * @param angle The angle in radians to rotate by.
+   * @returns The constructed rotation matrix.
+   */
+  static rotationZ(angleInRadians: number): Mat4 {
+    const mat = new Mat4()
+    const c = Math.cos(angleInRadians)
+    const s = Math.sin(angleInRadians)
+
+    // prettier-ignore
+    mat._data = [
+      c, s, 0, 0,
+      -s, c, 0, 0,
+      0, 0, 1, 0,
+      0, 0, 0, 1
+    ]
+
+    return mat
+  }
+
+  /**
+   * Constructs a scaling matrix based on the specified scaling factor.
+   * @param factor The factor to scale by.
+   * @returns The constructed scaling matrix.
+   */
+  static scale({ x, y, z }: Vec3): Mat4 {
+    const mat = new Mat4()
+
+    // prettier-ignore
+    mat._data = [
+      x, 0, 0, 0, // Column 1
+      0, y, 0, 0, // Column 2
+      0, 0, z, 0, // Column 3
+      0, 0, 0, 1, // Column 4
+    ];
+
+    return mat
+  }
+
+  /**
+   * Multiplies two matrices together.
+   * @param a The first matrix to multiply.
+   * @param b The second matrix to multiply.
+   * @returns The product of the two matrices.
+   */
+  static multiply(a: Mat4, b: Mat4): Mat4 {
+    const mat = new Mat4()
+
+    // prettier-ignore
+    mat._data = [
+      // Column 1
+      a._data[0] * b._data[0] + a._data[4] * b._data[1] + a._data[8] * b._data[2] + a._data[12] * b._data[3],
+      a._data[1] * b._data[0] + a._data[5] * b._data[1] + a._data[9] * b._data[2] + a._data[13] * b._data[3],
+      a._data[2] * b._data[0] + a._data[6] * b._data[1] + a._data[10] * b._data[2] + a._data[14] * b._data[3],
+      a._data[3] * b._data[0] + a._data[7] * b._data[1] + a._data[11] * b._data[2] + a._data[15] * b._data[3],
+
+      // Column 2
+      a._data[0] * b._data[4] + a._data[4] * b._data[5] + a._data[8] * b._data[6] + a._data[12] * b._data[7],
+      a._data[1] * b._data[4] + a._data[5] * b._data[5] + a._data[9] * b._data[6] + a._data[13] * b._data[7],
+      a._data[2] * b._data[4] + a._data[6] * b._data[5] + a._data[10] * b._data[6] + a._data[14] * b._data[7],
+      a._data[3] * b._data[4] + a._data[7] * b._data[5] + a._data[11] * b._data[6] + a._data[15] * b._data[7],
+
+      // Column 3
+      a._data[0] * b._data[8] + a._data[4] * b._data[9] + a._data[8] * b._data[10] + a._data[12] * b._data[11],
+      a._data[1] * b._data[8] + a._data[5] * b._data[9] + a._data[9] * b._data[10] + a._data[13] * b._data[11],
+      a._data[2] * b._data[8] + a._data[6] * b._data[9] + a._data[10] * b._data[10] + a._data[14] * b._data[11],
+      a._data[3] * b._data[8] + a._data[7] * b._data[9] + a._data[11] * b._data[10] + a._data[15] * b._data[11],
+
+      // Column 4
+      a._data[0] * b._data[12] + a._data[4] * b._data[13] + a._data[8] * b._data[14] + a._data[12] * b._data[15],
+      a._data[1] * b._data[12] + a._data[5] * b._data[13] + a._data[9] * b._data[14] + a._data[13] * b._data[15],
+      a._data[2] * b._data[12] + a._data[6] * b._data[13] + a._data[10] * b._data[14] + a._data[14] * b._data[15],
+      a._data[3] * b._data[12] + a._data[7] * b._data[13] + a._data[11] * b._data[14] + a._data[15] * b._data[15],
+    ]
+
+    return mat
+  }
 }

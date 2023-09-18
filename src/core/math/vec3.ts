@@ -68,6 +68,24 @@ export class Vec3 {
   }
 
   /**
+   * Creates a new vector with all components set to zero.
+   * @returns {Vec3} - A new Vec3 instance with all components initialized to 0.
+   * @static
+   */
+  static get zero(): Vec3 {
+    return new Vec3()
+  }
+
+  /**
+   * Creates a new vector with all components set to one.
+   * @returns {Vec3} - A new Vec3 instance with all components initialized to 1.
+   * @static
+   */
+  static get one(): Vec3 {
+    return new Vec3(1, 1, 1)
+  }
+
+  /**
    * Converts the vector to an array representation.
    * @returns {number[]} - An array containing the components [X, Y, Z] of the vector.
    */
@@ -84,11 +102,12 @@ export class Vec3 {
   }
 
   /**
-   * Creates a new vector with all components set to zero.
-   * @returns {Vec3} - A new Vec3 instance with all components initialized to 0.
-   * @static
+   * Creates a new vector with the same component values as the current Vec3 instance.
+   * @param other The vector to copy from.
    */
-  static zero(): Vec3 {
-    return new Vec3()
+  copyFrom(other: Vec3) {
+    this._x = other._x
+    this._y = other._y
+    this._z = other._z
   }
 }
