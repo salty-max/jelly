@@ -1,12 +1,8 @@
 import { gl } from './gl'
 
-export type ShaderAttribute = {
-  [name: string]: number
-}
+export type ShaderAttribute = Record<string, number>
 
-export type ShaderUniform = {
-  [name: string]: WebGLUniformLocation
-}
+export type ShaderUniform = Record<string, WebGLUniformLocation>
 
 /**
  * Represents a WebGL shader.

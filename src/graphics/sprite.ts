@@ -1,5 +1,6 @@
 import { Vec3 } from '../core/math/vec3'
-import { AttributeInfo, GLBuffer } from '../gl/gl-buffer'
+import { AttributeInfo } from '../gl/attribute'
+import { GLBuffer } from '../gl/gl-buffer'
 
 /**
  * Encapsulates the concept of a sprite, a two-dimensional image or animation integrated into a larger scene.
