@@ -10,7 +10,7 @@ export class MessageBus {
   private constructor() {}
 
   static addSubscription(code: string, handler: IMessageHandler) {
-    if (this._subscriptions[code]) {
+    if (!this._subscriptions[code]) {
       this._subscriptions[code] = []
     }
 

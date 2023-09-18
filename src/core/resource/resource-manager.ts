@@ -3,7 +3,7 @@ import { Message } from '../message/message'
 import { ImageResourceLoader } from './image-resource-loader'
 
 export const MESSAGE_RESOURCE_LOADER_RESOURCE_LOADED =
-  'MESSAGE_RESOURcE_LOADER_RESOURCE_LOADED::'
+  'MESSAGE_RESOURCE_LOADER_RESOURCE_LOADED::'
 
 export class ResourceManager {
   private static _loaders: IResourceLoader[] = []
@@ -38,6 +38,7 @@ export class ResourceManager {
     for (const l of this._loaders) {
       if (l.supportedExtensions.includes(ext)) {
         l.loadResource(name)
+        return
       }
     }
 
