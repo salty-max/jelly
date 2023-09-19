@@ -1,4 +1,3 @@
-import { v4 as uuidv4 } from 'uuid'
 import { Shader } from '../../gl/shader'
 import { IMessageHandler } from '../message'
 import { Message } from '../message/message'
