@@ -1,12 +1,12 @@
 import { GLUtil, gl } from '../gl/gl'
 import { Material } from '../graphics/material'
 import { MaterialManager } from '../graphics/material-manager'
-import { Sprite } from '../graphics/sprite'
 import { BasicShader } from '../shaders/basic-shader'
 import { hextoGl } from '../util/util'
 import { Mat4 } from './math/mat4'
 import { MessageBus } from './message/message-bus'
 import { ResourceManager } from './resource/resource-manager'
+import { ZoneManager } from './world/zone-manager'
 
 /**
  * The core engine class
@@ -15,8 +15,6 @@ export class Engine {
   private _canvas!: HTMLCanvasElement
   private _basicShader!: BasicShader
   private _projection!: Mat4
-
-  private _sprite!: Sprite
 
   /**
    * Create a new engine
@@ -41,9 +39,8 @@ export class Engine {
       new Material('firefox', '../../resources/textures/firefox.gif'),
     )
 
-    // Load
-    this._sprite = new Sprite('test', 'firefox')
-    this._sprite.load()
+    const zoneId = ZoneManager.createTestZone()
+    ZoneManager.changeZone(zoneId)
 
     this.resize()
     this.loop()
@@ -70,13 +67,16 @@ export class Engine {
 
   private loop() {
     MessageBus.update()
+
+    ZoneManager.update(0)
+
     gl.clear(gl.COLOR_BUFFER_BIT)
 
     // Set projection plane
     const projLocation = this._basicShader.getUniformLocation('u_projection')
     gl.uniformMatrix4fv(projLocation, false, this._projection.data)
 
-    this._sprite.draw(this._basicShader)
+    ZoneManager.draw(this._basicShader)
 
     requestAnimationFrame(this.loop.bind(this))
   }
