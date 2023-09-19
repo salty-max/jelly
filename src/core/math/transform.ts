@@ -40,9 +40,14 @@ export class Transform {
   getTransformationMatrix(): Mat4 {
     const translation = Mat4.translation(this.position)
     // TODO: Add x and y rotation for 3D
-    const rotation = Mat4.rotationZ(this.rotation.z)
+    const rotation = Mat4.rotationXYZ(
+      this.rotation.x,
+      this.rotation.y,
+      this.rotation.z,
+    )
     const scale = Mat4.scale(this.scale)
 
+    // T * R * S
     return Mat4.multiply(Mat4.multiply(translation, rotation), scale)
   }
 }

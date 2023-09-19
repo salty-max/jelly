@@ -1,4 +1,5 @@
 import { Shader } from '../../gl/shader'
+import { Component } from '../component/component'
 import { Mat4 } from '../math/mat4'
 import { Transform } from '../math/transform'
 import { Scene } from './scene'
@@ -16,33 +17,13 @@ export class Node {
    */
   transform: Transform = new Transform()
 
-  /**
-   * The unique ID of the node.
-   */
   private _id: number
-  /**
-   * The children nodes of this node.
-   */
-  private _children: Node[] = []
-  /**
-   * The parent node of this node.
-   */
-  private _parent: Node | undefined
-  /**
-   * The scene that this node belongs to.
-   */
-  private _scene: Scene | undefined
-  /**
-   * Whether or not this node has been loaded.
-   */
   private _isLoaded: boolean = false
-  /**
-   * The local transformation matrix of this node.
-   */
-  // private _localMatrix: Mat4 = Mat4.identity()
-  /**
-   * The world transformation matrix of this node.
-   */
+  private _children: Node[] = []
+  private _parent: Node | undefined
+  private _scene: Scene | undefined
+  private _components: Component[] = []
+  private _localMatrix: Mat4 = Mat4.identity()
   private _worldMatrix: Mat4 = Mat4.identity()
 
   /**
@@ -126,10 +107,24 @@ export class Node {
   }
 
   /**
+   * Adds a component to the node.
+   * @param component The component to add to the node.
+   */
+  addComponent(component: Component) {
+    this._components.push(component)
+    component.setOwner(this)
+  }
+
+  /**
    * Loads the node and its children.
    */
   load() {
     this._isLoaded = true
+
+    for (const component of this._components) {
+      component.load()
+    }
+
     for (const child of this._children) {
       child.load()
     }
@@ -140,6 +135,13 @@ export class Node {
    * @param time The time since the last update in milliseconds.
    */
   update(time: number) {
+    this._localMatrix = this.transform.getTransformationMatrix()
+    this.updateWorldMatrix(this._parent ? this._parent.worldMatrix : undefined)
+
+    for (const component of this._components) {
+      component.update(time)
+    }
+
     for (const child of this._children) {
       child.update(time)
     }
@@ -150,6 +152,10 @@ export class Node {
    * @param shader The shader to use to draw the node.
    */
   draw(shader: Shader) {
+    for (const component of this._components) {
+      component.draw(shader)
+    }
+
     for (const child of this._children) {
       child.draw(shader)
     }
@@ -161,5 +167,17 @@ export class Node {
    */
   protected onAdded(scene: Scene) {
     this._scene = scene
+  }
+
+  private updateWorldMatrix(parentWorldMatrix?: Mat4) {
+    if (parentWorldMatrix) {
+      this._worldMatrix = Mat4.multiply(parentWorldMatrix, this._localMatrix)
+    } else {
+      this._worldMatrix.copyFrom(this._localMatrix)
+    }
+
+    for (const child of this._children) {
+      child.updateWorldMatrix(this._worldMatrix)
+    }
   }
 }

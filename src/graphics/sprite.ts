@@ -1,5 +1,4 @@
 import { Mat4 } from '../core/math/mat4'
-import { Vec3 } from '../core/math/vec3'
 import { AttributeInfo } from '../gl/attribute'
 import { gl } from '../gl/gl'
 import { GLBuffer } from '../gl/gl-buffer'
@@ -20,8 +19,6 @@ export class Sprite {
   private _buffer!: GLBuffer
   private _materialName: string | undefined
   private _material: Material | undefined
-
-  position: Vec3 = Vec3.zero
 
   /**
    * Constructs a new sprite with the given name and dimensions.
@@ -90,22 +87,16 @@ export class Sprite {
    * Updates the sprite based on the elapsed time.
    * @param {number} time - The elapsed time since the last frame.
    */
-  update(time: number) {
-    console.log(time)
-  }
+  update(_time: number) {}
 
   /**
    * Renders the sprite to the screen.
    *
    * This method binds the underlying buffer and triggers the drawing process, rendering the sprite.
    */
-  draw(shader: Shader) {
+  draw(shader: Shader, model: Mat4) {
     const modelLocation = shader.getUniformLocation('u_model')
-    gl.uniformMatrix4fv(
-      modelLocation,
-      false,
-      new Float32Array(Mat4.translation(this.position).data),
-    )
+    gl.uniformMatrix4fv(modelLocation, false, model.toFloat32Array())
 
     if (this._material) {
       // Set uniforms
