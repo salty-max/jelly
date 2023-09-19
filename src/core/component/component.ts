@@ -1,13 +1,16 @@
+import { IComponent, IComponentData } from '.'
 import { Shader } from '../../gl/shader'
 import { Node } from '../world/node'
 
-export abstract class Component {
-  name: string
+export abstract class Component implements IComponent {
+  name: string | undefined
 
   protected _owner!: Node
+  protected _data: IComponentData
 
-  constructor(name: string) {
-    this.name = name
+  constructor(data: IComponentData) {
+    this.name = data.name
+    this._data = data
   }
 
   get owner(): Node {

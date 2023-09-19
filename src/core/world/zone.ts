@@ -2,6 +2,7 @@ import { v4 as uuidv4 } from 'uuid'
 import { Shader } from '../../gl/shader'
 import { Scene } from './scene'
 import { Node } from './node'
+import { ComponentManager } from '../component/component-manager'
 
 /**
  * Lists the possible states of a zone.
@@ -131,6 +132,13 @@ export class Zone {
 
     if (nodeData.transform) {
       node.transform.setFromJson(nodeData.transform)
+    }
+
+    if (nodeData.components) {
+      for (const componentData of nodeData.components) {
+        const component = ComponentManager.extractComponent(componentData)
+        node.addComponent(component)
+      }
     }
 
     if (nodeData.children) {

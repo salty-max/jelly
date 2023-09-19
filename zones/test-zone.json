@@ -19,7 +19,21 @@
               "x": 120,
               "y": 120
             }
-          }
+          },
+          "components": [
+            {
+              "type": "sprite",
+              "name": "Firefox",
+              "materialName": "firefox"
+            }
+          ]
+        }
+      ],
+      "components": [
+        {
+          "type": "sprite",
+          "name": "Firefox",
+          "materialName": "firefox"
         }
       ]
     }

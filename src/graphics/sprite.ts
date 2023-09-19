@@ -13,7 +13,7 @@ import { MaterialManager } from './material-manager'
  * @class
  */
 export class Sprite {
-  private _name: string
+  private _name?: string
   private _width: number
   private _height: number
   private _buffer!: GLBuffer
@@ -29,7 +29,7 @@ export class Sprite {
    * @param {number} height - The height of the sprite in pixels.
    */
   constructor(
-    name: string,
+    name: string | undefined,
     materialName: string,
     width: number = 100,
     height: number = 100,
@@ -44,7 +44,7 @@ export class Sprite {
   /**
    * Retrieves the name of the sprite.
    */
-  get name(): string {
+  get name(): string | undefined {
     return this._name
   }
 

@@ -1,5 +1,5 @@
 import { Shader } from '../../gl/shader'
-import { Component } from '../component/component'
+import { IComponent } from '../component'
 import { Mat4 } from '../math/mat4'
 import { Transform } from '../math/transform'
 import { Scene } from './scene'
@@ -22,7 +22,7 @@ export class Node {
   private _children: Node[] = []
   private _parent: Node | undefined
   private _scene: Scene | undefined
-  private _components: Component[] = []
+  private _components: IComponent[] = []
   private _localMatrix: Mat4 = Mat4.identity()
   private _worldMatrix: Mat4 = Mat4.identity()
 
@@ -110,7 +110,7 @@ export class Node {
    * Adds a component to the node.
    * @param component The component to add to the node.
    */
-  addComponent(component: Component) {
+  addComponent(component: IComponent) {
     this._components.push(component)
     component.setOwner(this)
   }

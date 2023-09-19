@@ -3,6 +3,8 @@ import { Material } from '../graphics/material'
 import { MaterialManager } from '../graphics/material-manager'
 import { BasicShader } from '../shaders/basic-shader'
 import { hextoGl } from '../util/util'
+import { ComponentManager } from './component/component-manager'
+import { SpriteComponentBuilder } from './component/sprite-component'
 import { Mat4 } from './math/mat4'
 import { MessageBus } from './message/message-bus'
 import { ResourceManager } from './resource/resource-manager'
@@ -31,6 +33,8 @@ export class Engine {
 
     ResourceManager.init()
     ZoneManager.init()
+
+    ComponentManager.registerBuilder(new SpriteComponentBuilder())
 
     this._basicShader = new BasicShader()
     this._basicShader.use()
