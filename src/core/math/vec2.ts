@@ -65,6 +65,28 @@ export class Vec2 {
   }
 
   /**
+   * Creates a new vector with the same component values as the current Vec3 instance.
+   * @param other The vector to copy from.
+   */
+  copyFrom(other: Vec2) {
+    this._x = other._x
+    this._y = other._y
+  }
+
+  /**
+   * Sets the components of the vector from JSON data.
+   * @param json The JSON object to deserialize from.
+   */
+  setFromJson(json: any): void {
+    if (json.x !== undefined) {
+      this._x = Number(json.x)
+    }
+    if (json.y !== undefined) {
+      this._y = Number(json.y)
+    }
+  }
+
+  /**
    * Creates a new vector with all components set to zero.
    * @returns {Vec3} - A new Vec2 instance with all components initialized to 0.
    * @static

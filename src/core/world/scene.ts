@@ -1,3 +1,4 @@
+import { v4 as uuidv4 } from 'uuid'
 import { Shader } from '../../gl/shader'
 import { Node } from './node'
 
@@ -12,7 +13,7 @@ export class Scene {
    * Initializes a new Scene.
    */
   constructor() {
-    this._root = new Node(0, '__ROOT__', this)
+    this._root = new Node(uuidv4(), '__ROOT__', this)
   }
 
   /**

@@ -1,6 +1,7 @@
 import { IResource, IResourceLoader } from '.'
 import { Message } from '../message/message'
 import { ImageResourceLoader } from './image-resource-loader'
+import { JsonResourceLoader } from './json-resource-loader'
 
 export const MESSAGE_RESOURCE_LOADER_RESOURCE_LOADED =
   'MESSAGE_RESOURCE_LOADER_RESOURCE_LOADED::'
@@ -13,6 +14,7 @@ export class ResourceManager {
 
   static init() {
     this._loaders.push(new ImageResourceLoader())
+    this._loaders.push(new JsonResourceLoader())
   }
 
   static registerLoader(loader: IResourceLoader) {
@@ -55,7 +57,6 @@ export class ResourceManager {
     } else {
       this.loadResource(name)
     }
-
     return undefined
   }
 }

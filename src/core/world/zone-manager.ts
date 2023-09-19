@@ -1,36 +1,27 @@
+import { v4 as uuidv4 } from 'uuid'
 import { Shader } from '../../gl/shader'
-import { TestZone } from './test-zone'
+import { IMessageHandler } from '../message'
+import { Message } from '../message/message'
+import { JsonResource } from '../resource/json-resource-loader'
+import {
+  MESSAGE_RESOURCE_LOADER_RESOURCE_LOADED,
+  ResourceManager,
+} from '../resource/resource-manager'
 import { Zone } from './zone'
 
 /**
  * Manages the zones in the game.
  */
-export class ZoneManager {
-  private static _globalZoneID = -1
-  private static _zones: Record<number, Zone> = {}
-  private static _activeZone: Zone
+export class ZoneManager implements IMessageHandler {
+  private static _registeredZones: Record<number, string> = {}
+  private static _activeZone: Zone | undefined
+  private static _instance: ZoneManager
 
   private constructor() {}
 
-  /**
-   * Creates a new zone.
-   * @param name The name of the zone.
-   * @param description The description of the zone.
-   * @returns The ID of the created zone.
-   */
-  static createZone(name: string, description?: string): number {
-    this._globalZoneID++
-    const zone = new Zone(this._globalZoneID, name, description)
-    this._zones[this._globalZoneID] = zone
-    return this._globalZoneID
-  }
-
-  // TODO: Remove this
-  static createTestZone() {
-    this._globalZoneID++
-    const zone = new TestZone(this._globalZoneID, 'test', 'A test zone')
-    this._zones[this._globalZoneID] = zone
-    return this._globalZoneID
+  static init() {
+    ZoneManager._instance = new ZoneManager()
+    this._registeredZones[0] = '../../../zones/test-zone.json'
   }
 
   /**
@@ -41,17 +32,24 @@ export class ZoneManager {
     if (this._activeZone) {
       this._activeZone.onDeactivated()
       this._activeZone.unload()
+      this._activeZone = undefined
     }
 
-    const zone = this._zones[id]
-    if (!zone) {
-      console.warn(`Cannot change to zone ${id}. Zone not found.`)
-      return
+    const zone = this._registeredZones[id]
+    if (zone) {
+      if (ResourceManager.isResourceLoaded(zone)) {
+        const resource = ResourceManager.getResource(zone) as JsonResource
+        this.loadZone(resource)
+      } else {
+        Message.subscribe(
+          MESSAGE_RESOURCE_LOADER_RESOURCE_LOADED + zone,
+          this._instance,
+        )
+        ResourceManager.loadResource(zone)
+      }
+    } else {
+      throw new Error(`Zone ${id} not found.`)
     }
-
-    this._activeZone = zone
-    this._activeZone.onActivated()
-    this._activeZone.load()
   }
 
   /**
@@ -72,5 +70,38 @@ export class ZoneManager {
     if (this._activeZone) {
       this._activeZone.draw(shader)
     }
+  }
+
+  onMessage(message: Message): void {
+    if (message.code.includes(MESSAGE_RESOURCE_LOADER_RESOURCE_LOADED)) {
+      const resource = message.context as JsonResource
+      ZoneManager.loadZone(resource)
+    }
+  }
+
+  private static loadZone(resource: JsonResource) {
+    const zoneData = resource.data
+    let zoneId = zoneData.id
+    if (zoneId === undefined) {
+      throw new Error('Zone file format exception: Zone ID not present.')
+    } else {
+      zoneId = Number(zoneId)
+    }
+    let zoneName = zoneData.name
+    if (zoneName === undefined) {
+      throw new Error('Zone file format exception: Zone name not present.')
+    } else {
+      zoneName = String(zoneName)
+    }
+
+    let zoneDescription = zoneData.description
+    if (zoneDescription) {
+      zoneDescription = String(zoneDescription)
+    }
+
+    this._activeZone = new Zone(zoneId, zoneName, zoneDescription)
+    this._activeZone.init(zoneData)
+    this._activeZone.onActivated()
+    this._activeZone.load()
   }
 }

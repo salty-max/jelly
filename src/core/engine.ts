@@ -30,6 +30,7 @@ export class Engine {
     gl.clearColor(...hextoGl('#1D2B53FF'))
 
     ResourceManager.init()
+    ZoneManager.init()
 
     this._basicShader = new BasicShader()
     this._basicShader.use()
@@ -39,8 +40,8 @@ export class Engine {
       new Material('firefox', '../../resources/textures/firefox.gif'),
     )
 
-    const zoneId = ZoneManager.createTestZone()
-    ZoneManager.changeZone(zoneId)
+    // TODO: Manage this im a game config file
+    ZoneManager.changeZone(0)
 
     this.resize()
     this.loop()

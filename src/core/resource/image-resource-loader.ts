@@ -1,4 +1,4 @@
-import { IResource } from '.'
+import { IResource, IResourceLoader } from '.'
 import { ResourceManager } from './resource-manager'
 
 export class ImageResource implements IResource {
@@ -18,7 +18,7 @@ export class ImageResource implements IResource {
   }
 }
 
-export class ImageResourceLoader implements ImageResourceLoader {
+export class ImageResourceLoader implements IResourceLoader {
   get supportedExtensions() {
     return ['png', 'gif', 'jpg']
   }

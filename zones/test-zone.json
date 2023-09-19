@@ -1,0 +1,27 @@
+{
+  "id": 0,
+  "name": "TestZone",
+  "description": "This is a test zone",
+  "nodes": [
+    {
+      "name": "ParentNode",
+      "transform": {
+        "position": {
+          "x": 300,
+          "y": 300
+        }
+      },
+      "children": [
+        {
+          "name": "ChildNode",
+          "transform": {
+            "position": {
+              "x": 120,
+              "y": 120
+            }
+          }
+        }
+      ]
+    }
+  ]
+}

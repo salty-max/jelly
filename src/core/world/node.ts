@@ -17,7 +17,7 @@ export class Node {
    */
   transform: Transform = new Transform()
 
-  private _id: number
+  private _id: string
   private _isLoaded: boolean = false
   private _children: Node[] = []
   private _parent: Node | undefined
@@ -31,7 +31,7 @@ export class Node {
    * @param id The unique ID of the node.
    * @param name The name of the node.
    */
-  constructor(id: number, name: string, scene?: Scene) {
+  constructor(id: string, name: string, scene?: Scene) {
     this._id = id
     this.name = name
     this._scene = scene
@@ -40,7 +40,7 @@ export class Node {
   /**
    * Retrieves the identifier of the node.
    */
-  get id(): number {
+  get id(): string {
     return this._id
   }
   /**

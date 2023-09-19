@@ -1,5 +1,7 @@
+import { v4 as uuidv4 } from 'uuid'
 import { Shader } from '../../gl/shader'
 import { Scene } from './scene'
+import { Node } from './node'
 
 /**
  * Lists the possible states of a zone.
@@ -59,6 +61,16 @@ export class Zone {
     return this._scene
   }
 
+  init(zoneData: any) {
+    if (zoneData.nodes === undefined) {
+      throw new Error(`Zone ${this._id} has no nodes.`)
+    }
+
+    for (const node of zoneData.nodes) {
+      this.loadNode(node, this._scene.root)
+    }
+  }
+
   /**
    * Loads the scene.
    */
@@ -107,5 +119,28 @@ export class Zone {
    */
   onDeactivated() {
     // TODO: Implement
+  }
+
+  private loadNode(nodeData: any, parent?: Node) {
+    let name: string = ''
+    if (nodeData.name !== undefined) {
+      name = String(nodeData.name)
+    }
+
+    let node = new Node(uuidv4(), name, this._scene)
+
+    if (nodeData.transform) {
+      node.transform.setFromJson(nodeData.transform)
+    }
+
+    if (nodeData.children) {
+      for (const childData of nodeData.children) {
+        this.loadNode(childData, node)
+      }
+    }
+
+    if (parent) {
+      parent.addChild(node)
+    }
   }
 }

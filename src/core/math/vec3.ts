@@ -110,4 +110,20 @@ export class Vec3 {
     this._y = other._y
     this._z = other._z
   }
+
+  /**
+   * Sets the components of the vector from JSON data.
+   * @param json The JSON object to deserialize from.
+   */
+  setFromJson(json: any): void {
+    if (json.x !== undefined) {
+      this._x = Number(json.x)
+    }
+    if (json.y !== undefined) {
+      this._y = Number(json.y)
+    }
+    if (json.z !== undefined) {
+      this._z = Number(json.z)
+    }
+  }
 }

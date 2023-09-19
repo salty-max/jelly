@@ -39,7 +39,6 @@ export class Transform {
    */
   getTransformationMatrix(): Mat4 {
     const translation = Mat4.translation(this.position)
-    // TODO: Add x and y rotation for 3D
     const rotation = Mat4.rotationXYZ(
       this.rotation.x,
       this.rotation.y,
@@ -49,5 +48,21 @@ export class Transform {
 
     // T * R * S
     return Mat4.multiply(Mat4.multiply(translation, rotation), scale)
+  }
+
+  /**
+   * Sets the values of this transform from the given JSON object.
+   * @param json The JSON object to deserialize from.
+   */
+  setFromJson(json: any): void {
+    if (json.position) {
+      this.position.setFromJson(json.position)
+    }
+    if (json.rotation) {
+      this.rotation.setFromJson(json.rotation)
+    }
+    if (json.scale) {
+      this.scale.setFromJson(json.scale)
+    }
   }
 }
