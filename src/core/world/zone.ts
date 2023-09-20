@@ -3,6 +3,7 @@ import { Shader } from '../../gl/shader'
 import { Scene } from './scene'
 import { Node } from './node'
 import { ComponentManager } from '../component/component-manager'
+import { BehaviorManager } from '../behavior/behavior-manager'
 
 /**
  * Lists the possible states of a zone.
@@ -138,6 +139,13 @@ export class Zone {
       for (const componentData of nodeData.components) {
         const component = ComponentManager.extractComponent(componentData)
         node.addComponent(component)
+      }
+    }
+
+    if (nodeData.behaviors) {
+      for (const behaviorData of nodeData.behaviors) {
+        const behavior = BehaviorManager.extractBehavior(behaviorData)
+        node.addBehavior(behavior)
       }
     }
 

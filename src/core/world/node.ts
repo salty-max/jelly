@@ -1,4 +1,5 @@
 import { Shader } from '../../gl/shader'
+import { IBehavior } from '../behavior'
 import { IComponent } from '../component'
 import { Mat4 } from '../math/mat4'
 import { Transform } from '../math/transform'
@@ -23,6 +24,7 @@ export class Node {
   private _parent: Node | undefined
   private _scene: Scene | undefined
   private _components: IComponent[] = []
+  private _behaviors: IBehavior[] = []
   private _localMatrix: Mat4 = Mat4.identity()
   private _worldMatrix: Mat4 = Mat4.identity()
 
@@ -115,6 +117,11 @@ export class Node {
     component.setOwner(this)
   }
 
+  addBehavior(behavior: IBehavior) {
+    this._behaviors.push(behavior)
+    behavior.setOwner(this)
+  }
+
   /**
    * Loads the node and its children.
    */
@@ -140,6 +147,10 @@ export class Node {
 
     for (const component of this._components) {
       component.update(time)
+    }
+
+    for (const behavior of this._behaviors) {
+      behavior.update(time)
     }
 
     for (const child of this._children) {

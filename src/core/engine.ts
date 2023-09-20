@@ -3,6 +3,8 @@ import { Material } from '../graphics/material'
 import { MaterialManager } from '../graphics/material-manager'
 import { BasicShader } from '../shaders/basic-shader'
 import { hextoGl } from '../util/util'
+import { BehaviorManager } from './behavior/behavior-manager'
+import { RotationBehaviorBuilder } from './behavior/rotation-behavior'
 import { ComponentManager } from './component/component-manager'
 import { SpriteComponentBuilder } from './component/sprite-component'
 import { Mat4 } from './math/mat4'
@@ -35,6 +37,7 @@ export class Engine {
     ZoneManager.init()
 
     ComponentManager.registerBuilder(new SpriteComponentBuilder())
+    BehaviorManager.registerBuilder(new RotationBehaviorBuilder())
 
     this._basicShader = new BasicShader()
     this._basicShader.use()

@@ -8,7 +8,6 @@ export class ComponentManager {
   }
 
   static extractComponent(json: any): IComponent {
-    console.log(json)
     if (json.type !== undefined) {
       if (ComponentManager._registeredBuilders[String(json.type)]) {
         const builder = ComponentManager._registeredBuilders[String(json.type)]

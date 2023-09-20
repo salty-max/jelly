@@ -126,4 +126,52 @@ export class Vec3 {
       this._z = Number(json.z)
     }
   }
+
+  /**
+   * Adds the given vector to the current vector.
+   * @param other The vector to add.
+   * @returns The sum of the two vectors.
+   */
+  add(other: Vec3): Vec3 {
+    this._x += other._x
+    this._y += other._y
+    this._z += other._z
+    return this
+  }
+
+  /**
+   * Subtracts the given vector from the current vector.
+   * @param other The vector to subtract.
+   * @returns The difference of the two vectors.
+   */
+  subtract(other: Vec3): Vec3 {
+    this._x -= other._x
+    this._y -= other._y
+    this._z -= other._z
+    return this
+  }
+
+  /**
+   * Multiplies the current vector by the given vector.
+   * @param value The vector to multiply by.
+   * @returns The product of the two vectors.
+   */
+  multiply(other: Vec3): Vec3 {
+    this._x *= other._x
+    this._y *= other._y
+    this._z *= other._z
+    return this
+  }
+
+  /**
+   * Divides the current vector by the given vector.
+   * @param value The value to divide by.
+   * @returns The quotient of the two vectors.
+   */
+  divide(other: Vec3): Vec3 {
+    this._x /= other._x
+    this._y /= other._y
+    this._z /= other._z
+    return this
+  }
 }

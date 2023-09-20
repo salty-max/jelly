@@ -26,6 +26,15 @@
               "name": "Firefox",
               "materialName": "firefox"
             }
+          ],
+          "behaviors": [
+            {
+              "type": "rotation",
+              "name": "rotateZ",
+              "rotation": {
+                "z": 0.01
+              }
+            }
           ]
         }
       ],
@@ -34,6 +43,15 @@
           "type": "sprite",
           "name": "Firefox",
           "materialName": "firefox"
+        }
+      ],
+      "behaviors": [
+        {
+          "type": "rotation",
+          "name": "rotateZ",
+          "rotation": {
+            "z": 0.01
+          }
         }
       ]
     }

@@ -2,8 +2,9 @@ import { Node } from '../world/node'
 import { Component } from './component'
 
 export interface IComponent {
-  name: string | undefined
+  name?: string
   protected owner: Node
+  
   setOwner(owner: Node): void
   load(): void
   update(_time: number): void
@@ -11,7 +12,7 @@ export interface IComponent {
 }
 
 export interface IComponentData {
-  name: string | undefined
+  name?: string
   setFromJson(json: any): void
 }
 
