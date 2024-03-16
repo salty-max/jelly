@@ -6,9 +6,9 @@ const textVariants = cva('', {
   variants: {
     variant: {
       default: 'text-base',
-      title: 'text-3xl font-bold',
-      subtitle: 'text-2xl font-semibold',
-      cardTitle: 'text-xl font-semibold',
+      title: 'text-2xl font-bold',
+      subtitle: 'text-xl font-semibold',
+      cardTitle: 'text-lg font-semibold',
       destructive: 'text-destructive',
       caption: 'text-sm',
     },
