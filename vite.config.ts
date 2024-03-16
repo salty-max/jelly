@@ -23,11 +23,19 @@ export default defineConfig({
     copyPublicDir: false,
     lib: {
       entry: path.resolve(__dirname, 'lib/index.ts'),
-      name: '@jelly-io/ui',
-      formats: ['es', 'cjs', 'umd'],
+      name: '@jellyio/ui',
+      fileName: (format) => `index.${format}.js`,
     },
     rollupOptions: {
       external: ['react', 'react-dom', 'react/jsx-runtime', 'tailwindcss'],
+      output: {
+        globals: {
+          react: 'React',
+          'react-dom': 'ReactDOM',
+          'react/jsx-runtime': 'ReactJSXRuntime',
+          tailwindcss: 'TailwindCSS',
+        },
+      },
     },
   },
   resolve: {
