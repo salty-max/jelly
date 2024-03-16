@@ -20,14 +20,14 @@
   "bugs": {
     "url": "https://github.com/salty-max/jelly/issues"
   },
-  "main": "dist/jelly.umd.js",
-  "module": "dist/jelly.es.js",
+  "main": "dist/index.umd.js",
+  "module": "dist/index.es.js",
   "types": "dist/index.d.ts",
   "exports": {
     ".": {
       "types": "./dist/index.d.ts",
-      "import": "./dist/jelly.es.js",
-      "require": "./dist/jelly.umd.js"
+      "import": "./dist/index.es.js",
+      "require": "./dist/index.umd.js"
     }
   },
   "files": [
