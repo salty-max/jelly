@@ -2,6 +2,14 @@ import type { StorybookConfig } from '@storybook/react-vite';
 
 const config: StorybookConfig = {
   stories: ['../lib/**/*.mdx', '../lib/**/*.stories.@(js|jsx|mjs|ts|tsx)'],
+  core: {
+    builder: {
+      name: '@storybook/builder-vite',
+      options: {
+        viteConfigPath: './vite.config.ts',
+      },
+    },
+  },
   addons: [
     '@storybook/addon-onboarding',
     '@storybook/addon-links',
@@ -17,11 +25,23 @@ const config: StorybookConfig = {
   docs: {
     autodocs: 'tag',
   },
-  viteFinal(config) {
-    config.plugins = (config.plugins ?? []).filter(
-      (plugin) => plugin && 'name' in plugin && plugin.name !== 'vite:dts',
-    );
-    return config;
+  viteFinal: async (config) => {
+    const { mergeConfig } = await import('vite');
+
+    return mergeConfig(config, {
+      resolve: {
+        extensions: [
+          '.mjs',
+          '.js',
+          '.mts',
+          '.ts',
+          '.jsx',
+          '.tsx',
+          '.json',
+          '.mdx',
+        ],
+      },
+    });
   },
 };
 

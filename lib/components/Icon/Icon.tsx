@@ -1,7 +1,7 @@
 import { icons } from 'lucide-react';
 import React from 'react';
 
-interface IconProps extends React.HTMLAttributes<SVGElement> {
+export interface IconProps extends React.HTMLAttributes<SVGElement> {
   name: string;
   color?: string;
   size?: number;

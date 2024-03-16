@@ -8,7 +8,7 @@ const textVariants = cva('', {
       default: 'text-base',
       title: 'text-2xl font-bold',
       subtitle: 'text-xl font-semibold',
-      cardTitle: 'text-lg font-semibold',
+      cardTitle: 'font-semibold',
       destructive: 'text-destructive',
       caption: 'text-sm',
     },

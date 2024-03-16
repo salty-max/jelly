@@ -6,8 +6,7 @@ const meta = {
   title: 'Atoms/Text',
   component: Text,
   parameters: {
-    // Optional parameter to center the component in the Canvas. More info: https://storybook.js.org/docs/configure/story-layout
-    layout: 'centered',
+    componentSubtitle: 'Text component is divided in semantic variants.',
   },
   // This component will have an automatically generated Autodocs entry: https://storybook.js.org/docs/writing-docs/autodocs
   tags: ['autodocs'],
@@ -18,14 +17,7 @@ const meta = {
   argTypes: {
     variant: {
       control: 'select',
-      options: [
-        'default',
-        'destructive',
-        'outline',
-        'secondary',
-        'ghost',
-        'link',
-      ],
+      options: ['default', 'title', 'subtitle', 'cardTitle', 'caption'],
     },
   },
 } satisfies Meta<TextProps>;
@@ -34,36 +26,24 @@ export default meta;
 type Story = StoryObj<typeof meta>;
 
 // More on writing stories with args: https://storybook.js.org/docs/writing-stories/args
-export const Default: Story = {
+export const Standard: Story = {
   args: {},
 };
 
-export const Title: Story = {
+/**
+ * 5 variants are supported.
+ */
+export const Variants: Story = {
   args: {
-    variant: 'title',
+    children: 'Lorem ipsum solor sit amet',
   },
-};
-
-export const Subtitle: Story = {
-  args: {
-    variant: 'subtitle',
-  },
-};
-
-export const CardTitle: Story = {
-  args: {
-    variant: 'cardTitle',
-  },
-};
-
-export const Destructive: Story = {
-  args: {
-    variant: 'destructive',
-  },
-};
-
-export const Caption: Story = {
-  args: {
-    variant: 'caption',
-  },
+  render: (args) => (
+    <div className="grid space-y-4">
+      <Text {...args} variant="title" />
+      <Text {...args} variant="subtitle" />
+      <Text {...args} variant="cardTitle" />
+      <Text {...args} />
+      <Text {...args} variant="caption" />
+    </div>
+  ),
 };

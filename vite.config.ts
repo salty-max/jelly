@@ -30,5 +30,10 @@ export default defineConfig({
       external: ['react', 'react-dom', 'react/jsx-runtime', 'tailwindcss'],
     },
   },
+  resolve: {
+    alias: {
+      '@/lib': path.resolve(__dirname, 'lib'),
+    },
+  },
   plugins: [react(), dts({ include: ['lib'], insertTypesEntry: true })],
 });
