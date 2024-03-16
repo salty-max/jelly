@@ -47,7 +47,7 @@
     "prebuild": "yarn clean",
     "release": "yarn build && auto shipit",
     "storybook": "storybook dev -p 6006",
-    "build-storybook": "storybook build",
+    "build-storybook": "yarn clean && storybook build",
     "test-storybook": "test-storybook",
     "chromatic": "chromatic --exit-zero-on-changes"
   },
