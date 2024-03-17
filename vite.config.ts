@@ -28,19 +28,6 @@ export default defineConfig({
     },
     rollupOptions: {
       external: ['react', 'react-dom', 'react/jsx-runtime', 'tailwindcss'],
-      output: {
-        globals: {
-          react: 'React',
-          'react-dom': 'ReactDOM',
-          'react/jsx-runtime': 'ReactJSXRuntime',
-          tailwindcss: 'TailwindCSS',
-        },
-      },
-    },
-  },
-  resolve: {
-    alias: {
-      '@/lib': path.resolve(__dirname, 'lib'),
     },
   },
   plugins: [react(), dts({ include: ['lib'], insertTypesEntry: true })],
