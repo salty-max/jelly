@@ -1,6 +1,5 @@
 {
   "name": "@jellyio/ui",
-  "private": false,
   "version": "0.2.3",
   "description": "A minimalistic but customizable library of UI components",
   "keywords": [
