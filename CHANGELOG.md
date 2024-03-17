@@ -1,3 +1,21 @@
+# v0.2.4 (Sun Mar 17 2024)
+
+#### 🐛 Bug Fix
+
+- fix/library-import [#2](https://github.com/salty-max/jelly/pull/2) ([@salty-max](https://github.com/salty-max))
+- fix/library-import [#1](https://github.com/salty-max/jelly/pull/1) ([@salty-max](https://github.com/salty-max))
+
+#### ⚠️ Pushed to `main`
+
+- fix: yarn.lock ([@salty-max](https://github.com/salty-max))
+- fix: library styles ([@salty-max](https://github.com/salty-max))
+
+#### Authors: 1
+
+- Maxime Blanc ([@salty-max](https://github.com/salty-max))
+
+---
+
 # v0.2.3 (Sat Mar 16 2024)
 
 #### ⚠️ Pushed to `main`
