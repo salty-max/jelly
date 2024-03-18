@@ -2,12 +2,9 @@ name: 'Chromatic'
 
 on:
   push:
-  pull_request:
-    types: [labeled]
 
 jobs:
   interaction-tests:
-    if: ${{ github.event.label.name == 'chromatic' }}
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
@@ -28,7 +25,6 @@ jobs:
           "npx http-server storybook-static --port 6006 --silent" \
           "npx wait-on tcp:6006 && yarn test-storybook"
   visual-tests:
-    if: ${{ github.event.label.name == 'chromatic' }}
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
