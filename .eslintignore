@@ -2,6 +2,7 @@
 *.config.*js
 *.config.ts
 *.setup.ts
+*.d.ts
 setupTests.ts
 dist/
 storybook-static/
