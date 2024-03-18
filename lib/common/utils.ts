@@ -1,5 +1,8 @@
 import clsx, { ClassValue } from 'clsx';
+import React from 'react';
 import { twMerge } from 'tailwind-merge';
+
+type PossibleRef<T> = React.Ref<T> | undefined;
 
 /**
  * Merges classes using clsx and tailwind-merge
@@ -12,72 +15,22 @@ import { twMerge } from 'tailwind-merge';
 export const cn = (...classes: ClassValue[]): string =>
   twMerge(clsx(...classes));
 
-/**
- * Handles setting callback refs and MutableRefObjects.
- * @param ref The ref to use for the instance.
- * @param instance The instance being set.
- */
-const setRef = <TInstance>(ref: React.Ref<TInstance>, instance: TInstance) => {
-  if (ref instanceof Function) {
-    ref(instance);
-  } else if (ref != null) {
-    (ref as React.MutableRefObject<TInstance>).current = instance;
+function setRef<T>(ref: PossibleRef<T>, value: T) {
+  if (typeof ref === 'function') {
+    ref(value);
+  } else if (ref !== null && ref !== undefined) {
+    (ref as React.MutableRefObject<T>).current = value;
   }
-};
+}
 
-/**
- * A function that combines multiple refs into one.
- *
- * @param {React.Ref<TInstance>[]} refs - an array of refs to be combined
- * @return {React.Ref<TInstance>} a function that sets the given instance to all the combined refs
- */
-export const combinedRef =
-  <TInstance>(refs: React.Ref<TInstance>[]) =>
-  (instance: TInstance | null) =>
-    refs.forEach((ref) => setRef(ref, instance));
+export function composeRefs<T>(...refs: PossibleRef<T>[]) {
+  return (node: T) => refs.forEach((ref) => setRef(ref, node));
+}
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-type AnyProps = Record<string, any>;
+export function useComposedRefs<T>(...refs: PossibleRef<T>[]) {
+  return React.useCallback(composeRefs(...refs), refs);
+}
 
-/**
- * Merges the given parent and child props objects into a new object.
- *
- * @param {AnyProps} parentProps - The parent props object.
- * @param {AnyProps} childProps - The child props object.
- * @return {AnyProps} The merged props object.
- */
-export const mergeReactProps = (
-  parentProps: AnyProps,
-  childProps: AnyProps,
-) => {
-  // All child props should override.
-  const overrideProps = { ...childProps };
-
-  for (const propName in childProps) {
-    const parentPropValue = parentProps[propName];
-    const childPropValue = childProps[propName];
-
-    const isHandler = /^on[A-Z]/.test(propName);
-    // If it's a handler, modify the override by composing the base handler.
-    if (isHandler) {
-      // Only compose the handlers if both exist.
-      if (childPropValue && parentPropValue) {
-        overrideProps[propName] = (...args: unknown[]) => {
-          childPropValue?.(...args);
-          parentPropValue?.(...args);
-        };
-        // Otherwise, avoid creating an unnecessary callback.
-      } else if (parentPropValue) {
-        overrideProps[propName] = parentPropValue;
-      }
-    } else if (propName === 'style') {
-      overrideProps[propName] = { ...parentPropValue, ...childPropValue };
-    } else if (propName === 'className') {
-      overrideProps[propName] = [parentPropValue, childPropValue]
-        .filter(Boolean)
-        .join(' ');
-    }
-  }
-
-  return { ...parentProps, ...overrideProps };
-};
+export function isNotNull<T>(value: T | null): value is T {
+  return value !== null;
+}

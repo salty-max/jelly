@@ -1,38 +1,54 @@
-import type { Meta, StoryObj } from '@storybook/react';
-import { Tooltip, TooltipContent, TooltipTrigger } from './Tooltip';
-import { Icon } from '../Icon';
+import type { Decorator, Meta, StoryFn } from '@storybook/react';
+import React from 'react';
+import { Text } from '../Text';
+import {
+  TooltipProvider,
+  Tooltip,
+  TooltipTrigger,
+  TooltipPortal,
+  TooltipContent,
+} from './Tooltip';
 
-// More on how to set up stories at: https://storybook.js.org/docs/writing-stories#default-export
+const decorator: Decorator = (Story) => (
+  <TooltipProvider>
+    <Story />
+  </TooltipProvider>
+);
+
 const meta = {
   title: 'Atoms/Tooltip',
-  component: TooltipContent,
-  parameters: {
-    // Optional parameter to center the component in the Canvas. More info: https://storybook.js.org/docs/configure/story-layout
-    layout: 'centered',
-  },
-  // This component will have an automatically generated Autodocs entry: https://storybook.js.org/docs/writing-docs/autodocs
   tags: ['autodocs'],
-  argTypes: {
-    sideOffset: {
-      control: 'number',
-    },
-  },
-} satisfies Meta<typeof TooltipContent>;
+  decorators: [decorator],
+} satisfies Meta;
 
 export default meta;
-type Story = StoryObj<typeof meta>;
+type Story = StoryFn<typeof meta>;
 
-// More on writing stories with args: https://storybook.js.org/docs/writing-stories/args
-export const Default: Story = {
-  args: {
-    children: "Hello, I'm a tooltip",
-  },
-  render: (args) => (
-    <Tooltip>
-      <TooltipTrigger>
-        <Icon name="MessageCircleMore" />
+export const Styled: Story = () => (
+  <Tooltip delayDuration={300}>
+    <TooltipTrigger asChild>
+      <Text>Hover or Focus me</Text>
+    </TooltipTrigger>
+    <TooltipPortal>
+      <TooltipContent align="center" side="bottom" sideOffset={5}>
+        Nicely done!
+      </TooltipContent>
+    </TooltipPortal>
+  </Tooltip>
+);
+
+export const Controlled: Story = () => {
+  const [open, setOpen] = React.useState(false);
+  return (
+    <Tooltip delayDuration={300} open={open} onOpenChange={setOpen}>
+      <TooltipTrigger asChild>
+        <Text>{`I'm controlled, look I'm ${open ? 'open' : 'closed'}`}</Text>
       </TooltipTrigger>
-      <TooltipContent {...args} />
+      <TooltipPortal>
+        <TooltipContent align="center" side="bottom" sideOffset={5}>
+          Nicely done!
+        </TooltipContent>
+      </TooltipPortal>
     </Tooltip>
-  ),
+  );
 };

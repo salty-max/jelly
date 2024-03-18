@@ -1,4 +1,3 @@
-/* eslint-disable import/no-extraneous-dependencies */
 import type { Meta, StoryObj } from '@storybook/react';
 import { fn, userEvent, within, expect } from '@storybook/test';
 import { Button, ButtonProps } from './Button';

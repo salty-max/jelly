@@ -1,6 +1,7 @@
 .eslintrc.cjs
 *.config.*js
 *.config.ts
+*.setup.ts
 setupTests.ts
 dist/
 storybook-static/
