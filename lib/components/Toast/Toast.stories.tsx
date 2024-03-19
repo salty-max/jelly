@@ -1,7 +1,6 @@
 import type { Meta, StoryFn } from '@storybook/react';
 import { Button } from '../Button';
 import { toast } from '../../hooks/useToast';
-import { Toaster } from './Toaster';
 import { ToastAction } from '.';
 
 const meta = {
@@ -18,7 +17,6 @@ type Story = StoryFn<typeof meta>;
 
 export const Simple: Story = () => (
   <>
-    <Toaster />
     <Button
       onClick={() =>
         toast({
@@ -33,7 +31,6 @@ export const Simple: Story = () => (
 
 export const WithTitle: Story = () => (
   <>
-    <Toaster />
     <Button
       onClick={() =>
         toast({
@@ -49,7 +46,6 @@ export const WithTitle: Story = () => (
 
 export const WithAction: Story = () => (
   <>
-    <Toaster />
     <Button
       onClick={() =>
         toast({
@@ -66,7 +62,6 @@ export const WithAction: Story = () => (
 
 export const Destructive: Story = () => (
   <>
-    <Toaster />
     <Button
       onClick={() =>
         toast({

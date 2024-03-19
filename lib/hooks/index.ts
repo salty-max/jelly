@@ -5,3 +5,4 @@ export * from './useCallbackRef';
 export * from './useId';
 export * from './useStateMachine';
 export * from './useEscapeKeydown';
+export * from './usePrevious';

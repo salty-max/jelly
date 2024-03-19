@@ -15,7 +15,6 @@ import {
   FormMessage,
 } from '../Form';
 import { toast } from '../../hooks/useToast';
-import { Toaster } from '../Toast';
 
 const meta = {
   title: 'Atoms/Input',
@@ -122,7 +121,6 @@ export const WithForm: StoryFn = () => {
 
   return (
     <>
-      <Toaster />
       <Form {...form}>
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-8">
           <FormField

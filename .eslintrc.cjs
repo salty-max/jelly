@@ -48,6 +48,8 @@ module.exports = {
     '@typescript-eslint/no-unsafe-assignment': 'off',
     '@typescript-eslint/no-unsafe-member-access': 'off',
     '@typescript-eslint/no-misused-promises': 'off',
+    '@typescript-eslint/unbound-method': 'off',
+    '@typescript-eslint/prefer-nullish-coalescing': 'off',
     'react/require-default-props': 'off',
     'react/react-in-jsx-scope': 'off',
     'react/jsx-props-no-spreading': 'off',
@@ -82,6 +84,7 @@ module.exports = {
     'no-underscore-dangle': 'off',
     'no-void': 'off',
     'nonblock-statement-body-position': 'off',
+    'class-methods-use-this': 'off',
     curly: 'off',
   },
 };

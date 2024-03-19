@@ -365,7 +365,7 @@ const TooltipPortal: React.FC<TooltipPortalProps> = ({
 
   return (
     <PortalProvider scope={__scopeTooltip} forceMount={forceMount}>
-      <Presence present={forceMount ?? context.open}>
+      <Presence present={forceMount || context.open}>
         <PortalPrimitive asChild container={container}>
           {children}
         </PortalPrimitive>
@@ -399,7 +399,7 @@ const TooltipContent = React.forwardRef<
   const context = useTooltipContext(CONTENT_NAME, props.__scopeTooltip);
 
   return (
-    <Presence present={forceMount ?? context.open}>
+    <Presence present={forceMount || context.open}>
       {context.disableHoverableContent ? (
         <TooltipContentImpl side={side} {...contentProps} ref={forwardedRef} />
       ) : (
@@ -495,7 +495,7 @@ const TooltipContentHoverable = React.forwardRef<
           y: event.clientY,
         };
         const hasEnteredTarget =
-          trigger?.contains(target) ?? content?.contains(target);
+          trigger?.contains(target) || content?.contains(target);
         const isPointerOutsideGraceArea = !isPointInPolygon(
           pointerPosition,
           pointerGraceArea,

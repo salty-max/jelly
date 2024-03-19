@@ -1,7 +1,7 @@
 import 'vitest-axe/extend-expect';
+import { expect } from 'vitest';
 import * as jestDOMMatchers from '@testing-library/jest-dom/matchers';
 import * as axeMatchers from 'vitest-axe/matchers';
-import { expect } from 'vitest';
 
 import type { AxeMatchers } from 'vitest-axe/matchers';
 

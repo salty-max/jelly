@@ -463,7 +463,7 @@ const Toast = React.forwardRef<ToastElement, ToastProps>(
     });
 
     return (
-      <Presence present={forceMount ?? open}>
+      <Presence present={forceMount || open}>
         <ToastImpl
           open={open}
           {...toastProps}
@@ -1052,7 +1052,7 @@ const getAnnounceTextContent = (container: HTMLElement) => {
       textContent.push(node.textContent);
     if (isHTMLElement(node)) {
       const isHidden =
-        node.ariaHidden ?? node.hidden ?? node.style.display === 'none';
+        node.ariaHidden || node.hidden || node.style.display === 'none';
       const isExcluded = node.dataset.jellyToastAnnounceExclude === '';
 
       if (!isHidden) {
