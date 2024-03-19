@@ -19,6 +19,11 @@ const meta = {
   title: 'Atoms/Tooltip',
   tags: ['autodocs'],
   decorators: [decorator],
+  parameters: {
+    componentSubtitle:
+      'A popup that displays information related to an element when the element receives keyboard focus or the mouse hovers over it.',
+    layout: 'centered',
+  },
 } satisfies Meta;
 
 export default meta;
