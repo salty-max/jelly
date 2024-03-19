@@ -1,18 +1,19 @@
 import React from 'react';
-import type { Preview } from '@storybook/react';
-import { ThemeProvider } from '../lib/contexts/Theme';
+import type { Preview, ReactRenderer } from '@storybook/react';
+import { withThemeByClassName } from '@storybook/addon-themes';
+import { Button, ThemeProvider, useTheme } from '../lib';
 
 import '../lib/tailwind.css';
 
 const preview: Preview = {
   decorators: [
-    (Story) => {
-      return (
-        <ThemeProvider>
-          <Story />
-        </ThemeProvider>
-      );
-    },
+    withThemeByClassName<ReactRenderer>({
+      themes: {
+        light: '',
+        dark: 'dark',
+      },
+      defaultTheme: 'light',
+    }),
   ],
   parameters: {
     controls: {
