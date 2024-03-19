@@ -1,4 +1,3 @@
-export * from './useTheme';
 export * from './useControllableState';
 export * from './useSize';
 export * from './useLayoutEffect';

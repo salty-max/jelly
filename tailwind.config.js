@@ -56,7 +56,7 @@ export default {
         sm: 'calc(var(--radius) - 4px)',
       },
       fontFamily: {
-        sans: ['var(--font-poppins)', ...fontFamily.sans],
+        sans: ['var(--font-sans)', ...fontFamily.sans],
       },
       cursor: ['help'],
     },

@@ -59,6 +59,8 @@ module.exports = {
     'react/jsx-indent': 'off',
     'react/jsx-no-useless-fragment': 'off',
     'react/jsx-no-bind': 'off',
+    'react/jsx-curly-newline': 'off',
+    'react/no-array-index-key': 'off',
     'import/prefer-default-export': 'off',
     'import/no-extraneous-dependencies': 'off',
     'import/no-cycle': 'off',
@@ -77,5 +79,8 @@ module.exports = {
     'no-plusplus': 'off',
     'no-nested-ternary': 'off',
     'no-underscore-dangle': 'off',
+    'no-void': 'off',
+    'nonblock-statement-body-position': 'off',
+    curly: 'off',
   },
 };
