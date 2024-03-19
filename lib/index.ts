@@ -9,6 +9,8 @@ export * from './components/Toast';
 export * from './components/Form';
 export * from './components/Label';
 export * from './components/Input';
+export * from './components/Checkbox';
+export * from './components/Textarea';
 export * from './hooks';
 export * from './contexts';
 export { cn } from './common';
