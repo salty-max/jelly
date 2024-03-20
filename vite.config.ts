@@ -1,3 +1,4 @@
+/// <reference types="vitest" />
 import path from 'node:path';
 import { defineConfig } from 'vitest/config';
 import react from '@vitejs/plugin-react';
@@ -15,9 +16,25 @@ export default defineConfig({
     },
   },
   test: {
-    globals: true,
+    setupFiles: ['./tests/vitest.setup.ts'],
     environment: 'jsdom',
-    setupFiles: './setupTests.ts',
+    deps: {
+      optimizer: {
+        web: {
+          include: ['vitest-canvas-mock'],
+        },
+      },
+    },
+    poolOptions: {
+      threads: {
+        singleThread: true,
+      },
+    },
+    environmentOptions: {
+      jsdom: {
+        resources: 'usable',
+      },
+    },
   },
   build: {
     copyPublicDir: false,

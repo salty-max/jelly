@@ -40,6 +40,7 @@ export const Text = React.forwardRef<HTMLHeadingElement, TextProps>(
         Comp = 'small';
         break;
       default:
+        Comp = 'p';
         break;
     }
 

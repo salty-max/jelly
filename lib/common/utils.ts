@@ -1,83 +1,63 @@
 import clsx, { ClassValue } from 'clsx';
+import React from 'react';
 import { twMerge } from 'tailwind-merge';
 
-/**
- * Merges classes using clsx and tailwind-merge
- * @example
- * cn('text-red-500', 'text-blue-500')
- * // => 'text-red-500 text-blue-500'
- * @param classes {ClassValue[]} - Array of classes to merge
- * @returns {string}
- */
-export const cn = (...classes: ClassValue[]): string =>
-  twMerge(clsx(...classes));
+type PossibleRef<T> = React.Ref<T> | undefined;
 
 /**
- * Handles setting callback refs and MutableRefObjects.
- * @param ref The ref to use for the instance.
- * @param instance The instance being set.
- */
-const setRef = <TInstance>(ref: React.Ref<TInstance>, instance: TInstance) => {
-  if (ref instanceof Function) {
-    ref(instance);
-  } else if (ref != null) {
-    (ref as React.MutableRefObject<TInstance>).current = instance;
-  }
-};
-
-/**
- * A function that combines multiple refs into one.
+ * Combines class names using `clsx` and merges Tailwind CSS classes using `twMerge`.
+ * This function is useful for conditionally joining class names together and ensuring
+ * that Tailwind utility classes are merged correctly, avoiding duplicate or conflicting classes.
  *
- * @param {React.Ref<TInstance>[]} refs - an array of refs to be combined
- * @return {React.Ref<TInstance>} a function that sets the given instance to all the combined refs
+ * @param {...ClassValue[]} classes - Class names to combine. Can include strings, arrays, or objects.
+ * @returns {string} The combined class string with Tailwind classes merged.
  */
-export const combinedRef =
-  <TInstance>(refs: React.Ref<TInstance>[]) =>
-  (instance: TInstance | null) =>
-    refs.forEach((ref) => setRef(ref, instance));
-
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-type AnyProps = Record<string, any>;
+const cn = (...classes: ClassValue[]): string => twMerge(clsx(...classes));
 
 /**
- * Merges the given parent and child props objects into a new object.
+ * Safely assigns a value to a React ref. Supports both function refs and object refs.
+ * This utility ensures that the ref is updated without directly mutating the ref object,
+ * following React's best practices for handling refs.
  *
- * @param {AnyProps} parentProps - The parent props object.
- * @param {AnyProps} childProps - The child props object.
- * @return {AnyProps} The merged props object.
+ * @template T - The type of the ref's current value.
+ * @param {PossibleRef<T>} ref - The ref to update. Can be a function ref, an object ref, or `undefined`.
+ * @param {T} value - The new value to set for the ref.
  */
-export const mergeReactProps = (
-  parentProps: AnyProps,
-  childProps: AnyProps,
-) => {
-  // All child props should override.
-  const overrideProps = { ...childProps };
-
-  for (const propName in childProps) {
-    const parentPropValue = parentProps[propName];
-    const childPropValue = childProps[propName];
-
-    const isHandler = /^on[A-Z]/.test(propName);
-    // If it's a handler, modify the override by composing the base handler.
-    if (isHandler) {
-      // Only compose the handlers if both exist.
-      if (childPropValue && parentPropValue) {
-        overrideProps[propName] = (...args: unknown[]) => {
-          childPropValue?.(...args);
-          parentPropValue?.(...args);
-        };
-        // Otherwise, avoid creating an unnecessary callback.
-      } else if (parentPropValue) {
-        overrideProps[propName] = parentPropValue;
-      }
-    } else if (propName === 'style') {
-      overrideProps[propName] = { ...parentPropValue, ...childPropValue };
-    } else if (propName === 'className') {
-      overrideProps[propName] = [parentPropValue, childPropValue]
-        .filter(Boolean)
-        .join(' ');
-    }
+function setRef<T>(ref: PossibleRef<T>, value: T) {
+  if (typeof ref === 'function') {
+    ref(value);
+  } else if (ref !== null && ref !== undefined) {
+    (ref as React.MutableRefObject<T>).current = value;
   }
+}
 
-  return { ...parentProps, ...overrideProps };
-};
+/**
+ * Creates a single ref callback that updates multiple refs. Useful when a component needs to
+ * share its ref with multiple owners, such as forwarding a ref and using it locally.
+ *
+ * @template T - The type of the ref's current value.
+ * @param {...PossibleRef<T>[]} refs - The refs to compose into a single ref callback.
+ * @returns {(node: T) => void} A ref callback that updates all provided refs.
+ */
+function composeRefs<T>(...refs: PossibleRef<T>[]) {
+  return (node: T) => refs.forEach((ref) => setRef(ref, node));
+}
+
+/**
+ * A hook that composes multiple refs into a single ref callback using `composeRefs`.
+ * This hook is useful for components that need to forward a ref and also attach their own
+ * ref handler. It ensures that all refs are updated when the component mounts or updates.
+ *
+ * @template T - The type of the ref's current value.
+ * @param {...PossibleRef<T>[]} refs - The refs to compose.
+ * @returns {(node: T) => void} A memoized ref callback that updates all provided refs.
+ */
+function useComposedRefs<T>(...refs: PossibleRef<T>[]) {
+  return React.useCallback(composeRefs(...refs), refs);
+}
+
+function isNotNull<T>(value: T | null): value is T {
+  return value !== null;
+}
+
+export { cn, useComposedRefs, composeRefs, isNotNull };

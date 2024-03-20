@@ -1,8 +1,6 @@
-/* eslint-disable import/no-extraneous-dependencies */
 import type { Meta, StoryObj } from '@storybook/react';
-import { fn, userEvent, within, expect } from '@storybook/test';
+import { fn } from '@storybook/test';
 import { Button, ButtonProps } from './Button';
-import { Icon } from '../Icon';
 
 // More on how to set up stories at: https://storybook.js.org/docs/writing-stories#default-export
 const meta = {
@@ -10,7 +8,8 @@ const meta = {
   component: Button,
   parameters: {
     componentSubtitle:
-      'The Button component in our UI library offers versatility, accessibility, and interactivity, serving as a cornerstone for intuitive user interactions across various interfaces.',
+      'Displays a button or a component that looks like a button.',
+    layout: 'centered',
   },
   // This component will have an automatically generated Autodocs entry: https://storybook.js.org/docs/writing-docs/autodocs
   args: {
@@ -44,7 +43,7 @@ export default meta;
 type Story = StoryObj<typeof meta>;
 
 // More on writing stories with args: https://storybook.js.org/docs/writing-stories/args
-export const Standard: Story = {
+export const Basic: Story = {
   args: {
     children: 'Click me',
   },
@@ -102,31 +101,10 @@ export const Sizes: Story = {
   ),
 };
 
-/**
- * AsChild property allows the button to behave as its children
- */
-export const AsChild: Story = {
+export const Loading: Story = {
   args: {
-    asChild: true,
-    children: (
-      <a
-        data-testid="link"
-        href="https://github.com/salty-max/jelly"
-        target="_blank"
-        rel="noreferrer"
-      >
-        <Icon className="size-4" name="Github" />
-        Github
-      </a>
-    ),
-  },
-
-  play: async ({ canvasElement }) => {
-    const canvas = within(canvasElement);
-    await userEvent.click(canvas.getByTestId('link'));
-    await expect(canvas.getByTestId('link')).toHaveAttribute(
-      'href',
-      'https://github.com/salty-max/jelly',
-    );
+    children: 'Send',
+    loading: true,
+    disabled: true,
   },
 };

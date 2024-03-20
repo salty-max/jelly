@@ -7,11 +7,12 @@ const meta = {
   component: Text,
   parameters: {
     componentSubtitle: 'Text component is divided in semantic variants.',
+    layout: 'centered',
   },
   // This component will have an automatically generated Autodocs entry: https://storybook.js.org/docs/writing-docs/autodocs
   tags: ['autodocs'],
   args: {
-    children: 'Lorem ipsum solor sit amet',
+    children: 'Lorem ipsum dolor sit amet',
   },
   // More on argTypes: https://storybook.js.org/docs/api/argtypes
   argTypes: {

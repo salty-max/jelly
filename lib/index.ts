@@ -1,8 +1,6 @@
 import './tailwind.css';
 
-export * from './components/Button';
-export * from './components/Icon';
-export * from './components/Slot';
-export * from './components/Text';
+export * from './components';
 export * from './hooks';
+export * from './contexts';
 export { cn } from './common';

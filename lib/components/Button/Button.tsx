@@ -5,7 +5,7 @@ import { cn } from '../../common';
 import { Icon } from '../Icon';
 
 const buttonVariants = cva(
-  'inline-flex items-center justify-center gap-1.5 whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&>svg]:size-4',
+  'inline-flex items-center justify-center gap-x-1.5 whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&>svg]:size-4',
   {
     variants: {
       variant: {
@@ -41,6 +41,7 @@ export interface ButtonProps
   asChild?: boolean;
   icon?: string;
   iconPosition?: 'left' | 'right';
+  loading?: boolean;
 }
 
 export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
@@ -52,6 +53,7 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
       asChild = false,
       icon,
       iconPosition = 'left',
+      loading = false,
       children,
       ...props
     },
@@ -62,13 +64,17 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
       <Comp
         className={cn(buttonVariants({ variant, size, className }))}
         ref={ref}
+        aria-label={
+          typeof children === 'string' ? children : props['aria-label']
+        }
         {...props}
       >
         {asChild ? (
           children
         ) : (
           <>
-            {icon && iconPosition === 'left' && (
+            {loading && <Icon name="LoaderCircle" className="animate-spin" />}
+            {!loading && icon && iconPosition === 'left' && (
               <Icon data-testid="button-icon-left" name={icon} />
             )}
             {children}
