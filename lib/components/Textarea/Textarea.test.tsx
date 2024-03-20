@@ -1,6 +1,20 @@
-import { RenderResult, fireEvent, render } from '@testing-library/react';
-import { axe } from 'vitest-axe';
-import { describe, expect, vi } from 'vitest';
+import {
+  RenderResult,
+  cleanup,
+  fireEvent,
+  render,
+} from '@testing-library/react';
+import {
+  describe,
+  expect,
+  vi,
+  beforeEach,
+  afterEach,
+  it,
+  beforeAll,
+  afterAll,
+} from 'vitest';
+import axe from '../../../tests/axe-helper';
 import { Textarea } from './Textarea';
 import { Label } from '../Label';
 
@@ -17,6 +31,10 @@ describe('given a default Textarea', () => {
       />,
     );
     textArea = rendered.getByTestId('test-textarea');
+  });
+
+  afterEach(() => {
+    cleanup();
   });
 
   it('should have no accessibility violations', async () => {
@@ -50,6 +68,10 @@ describe('given a disabled Textarea', () => {
     textArea = rendered.getByTestId('test-textarea');
   });
 
+  afterEach(() => {
+    cleanup();
+  });
+
   it('should have no accessibility violations', async () => {
     expect(await axe(rendered.container)).toHaveNoViolations();
   });
@@ -77,6 +99,10 @@ describe('given a labeled Textarea', () => {
     );
   });
 
+  afterEach(() => {
+    cleanup();
+  });
+
   it('should have no accessibility violations', async () => {
     expect(await axe(rendered.container)).toHaveNoViolations();
   });
@@ -98,6 +124,10 @@ describe('given a controlled Textarea', () => {
       />,
     );
     textArea = rendered.getByTestId('test-textarea');
+  });
+
+  afterEach(() => {
+    cleanup();
   });
 
   it('should have no accessibility violations', async () => {

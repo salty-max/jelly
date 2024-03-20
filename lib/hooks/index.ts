@@ -8,3 +8,4 @@ export * from './useEscapeKeydown';
 export * from './usePrevious';
 export * from './useDebounce';
 export * from './useToast';
+export * from './useFocusGuards';

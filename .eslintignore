@@ -3,7 +3,7 @@
 *.config.ts
 *.setup.ts
 *.d.ts
-setupTests.ts
+tests/
 dist/
 storybook-static/
 node_modules/

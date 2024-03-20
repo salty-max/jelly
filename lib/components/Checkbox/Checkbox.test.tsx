@@ -1,7 +1,12 @@
-import { RenderResult, fireEvent, render } from '@testing-library/react';
+import {
+  RenderResult,
+  cleanup,
+  fireEvent,
+  render,
+} from '@testing-library/react';
 import React from 'react';
-import { axe } from 'vitest-axe';
-import { describe, expect, vi } from 'vitest';
+import { afterEach, describe, expect, vi, beforeEach, it } from 'vitest';
+import axe from '../../../tests/axe-helper';
 import { Checkbox, CheckboxIndicator } from './CheckboxPrimitive';
 
 const CHECKBOX_ROLE = 'checkbox';
@@ -32,6 +37,10 @@ describe('given a default Checkbox', () => {
     rendered = render(<CheckboxTest />);
     checkbox = rendered.getByRole(CHECKBOX_ROLE);
     indicator = rendered.queryByTestId(INDICATOR_TEST_ID);
+  });
+
+  afterEach(() => {
+    cleanup();
   });
 
   it('should have no accessibility violations', async () => {
@@ -67,6 +76,10 @@ describe('given a disabled Checkbox', () => {
     rendered = render(<CheckboxTest disabled />);
   });
 
+  afterEach(() => {
+    cleanup();
+  });
+
   it('should have no accessibility violations', async () => {
     expect(await axe(rendered.container)).toHaveNoViolations();
   });
@@ -84,6 +97,10 @@ describe('given an uncontrolled `checked` Checkbox', () => {
     );
     checkbox = rendered.getByRole(CHECKBOX_ROLE);
     indicator = rendered.queryByTestId(INDICATOR_TEST_ID);
+  });
+
+  afterEach(() => {
+    cleanup();
   });
 
   it('should have no accessibility violations', async () => {
@@ -115,6 +132,10 @@ describe('given a controlled `checked` Checkbox', () => {
       <CheckboxTest checked onCheckedChange={onCheckedChange} />,
     );
     checkbox = rendered.getByRole(CHECKBOX_ROLE);
+  });
+
+  afterEach(() => {
+    cleanup();
   });
 
   describe('when clicking the checkbox', () => {

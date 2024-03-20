@@ -1,9 +1,28 @@
+/**
+ * This file provides utilities for creating and managing React Contexts with enhanced capabilities,
+ * including context scoping and composition. It allows for the definition of contexts that are
+ * isolated to specific parts of an application or library, enabling more modular and maintainable
+ * state management patterns. The utilities support default context values, mandatory contexts within
+ * specific components, and the composition of multiple contexts into a single scope. This approach
+ * is particularly useful in complex applications or libraries where different parts of the application
+ * might need to share state in a controlled manner.
+ */
 import React from 'react';
 
-function createContext<ContextValueType extends object | null>(
+/**
+ * Creates a React context with an optional default value and a provider that only re-renders
+ * when its value changes. It also provides a hook for consuming the context that enforces
+ * its presence within the component tree.
+ *
+ * @template ContextValueType - The type of the value stored in the context.
+ * @param {string} rootComponentName - The name of the root component that provides this context, used in error messages.
+ * @param {ContextValueType} [defaultContext] - The default value for the context.
+ * @returns {[React.Provider<ContextValueType>, () => ContextValueType]} A tuple containing the Context Provider component and a hook for consuming the context.
+ */
+const createContext = <ContextValueType extends object | null>(
   rootComponentName: string,
   defaultContext?: ContextValueType,
-) {
+) => {
   const Context = React.createContext<ContextValueType | undefined>(
     defaultContext,
   );
@@ -33,7 +52,7 @@ function createContext<ContextValueType extends object | null>(
 
   Provider.displayName = `${rootComponentName}Provider`;
   return [Provider, useContext] as const;
-}
+};
 
 type Scope<C = any> = Record<string, React.Context<C>[]> | undefined;
 type ScopeHook = (scope: Scope) => Record<string, Scope>;
@@ -42,7 +61,15 @@ interface CreateScope {
   (): ScopeHook;
 }
 
-function composeContextScopes(...scopes: CreateScope[]) {
+/**
+ * Composes multiple context scopes into a single scope. This function is used to merge the
+ * contexts from different scopes into a unified context scope that can be used throughout
+ * an application or library.
+ *
+ * @param {...CreateScope[]} scopes - An array of createScope functions representing the individual context scopes to be composed.
+ * @returns {CreateScope} A createScope function representing the composed context scope.
+ */
+const composeContextScopes = (...scopes: CreateScope[]) => {
   const baseScope = scopes[0];
   if (scopes.length === 1) return baseScope;
 
@@ -71,12 +98,22 @@ function composeContextScopes(...scopes: CreateScope[]) {
 
   createScope.scopeName = baseScope.scopeName;
   return createScope;
-}
+};
 
-function createContextScope(
+/**
+ * Creates a scope for contexts, allowing for the creation and composition of multiple contexts
+ * under a single namespace. This utility is particularly useful for complex component libraries
+ * or applications where you need to isolate state management to specific parts of the application
+ * without creating global dependencies.
+ *
+ * @param {string} scopeName - The name of the scope, used as a namespace for the contexts.
+ * @param {CreateScope[]} [createContextScopeDeps] - An array of dependent context scopes to be composed with this scope.
+ * @returns {[Function, Function]} A tuple containing a createContext function tailored for this scope and a function to compose multiple context scopes.
+ */
+const createContextScope = (
   scopeName: string,
   createContextScopeDeps: CreateScope[] = [],
-) {
+) => {
   let defaultContexts: any[] = [];
 
   function createContext<ContextValueType extends object | null>(
@@ -147,7 +184,7 @@ function createContextScope(
     createContext,
     composeContextScopes(createScope, ...createContextScopeDeps),
   ] as const;
-}
+};
 
 export { createContext, createContextScope };
 export type { CreateScope, Scope };

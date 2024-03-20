@@ -1,3 +1,23 @@
+/**
+ * This file defines a DismissableLayer component that can be used to manage the dismissal
+ * of content based on interactions outside of the layer (such as clicking outside or pressing
+ * the escape key). It leverages React context to handle nested layers and manage interactions
+ * that should dismiss the layer. This setup is particularly useful for modals, dropdowns,
+ * and other similar components where outside interactions can trigger dismissal.
+ *
+ * The DismissableLayer component supports disabling pointer events on elements outside of it,
+ * handling escape keydown events, pointer down outside events, focus outside events, and general
+ * interact outside events, offering a comprehensive API for managing outside interactions.
+ *
+ * Additionally, the file defines a DismissableLayerBranch component that can be used within
+ * a DismissableLayer to exempt certain elements from triggering the layer's dismissal, effectively
+ * creating a branch of elements that are considered part of the layer despite not being physically
+ * nested within it.
+ *
+ * The implementation utilizes custom hooks and contexts to track the state and behavior of the
+ * layers and branches, ensuring proper event handling and state management across potentially
+ * complex nested structures.
+ */
 import React from 'react';
 import {
   Primitive,
@@ -63,6 +83,21 @@ interface DismissableLayerProps extends PrimitiveDivProps {
   onDismiss?: () => void;
 }
 
+/**
+ * DismissableLayer component that manages dismissal based on outside interactions.
+ * It supports disabling interactions outside the layer, handling escape keydown,
+ * pointer down outside, focus outside, and general interact outside events.
+ *
+ * @component
+ * @param {DismissableLayerProps} props - The props for the DismissableLayer component.
+ * @param {boolean} [props.disableOutsidePointerEvents=false] - If true, disables hover, focus, and click interactions outside the DismissableLayer.
+ * @param {(event: KeyboardEvent) => void} [props.onEscapeKeyDown] - Callback for escape keydown events.
+ * @param {(event: PointerDownOutsideEvent) => void} [props.onPointerDownOutside] - Callback for pointer down outside events.
+ * @param {(event: FocusOutsideEvent) => void} [props.onFocusOutside] - Callback for focus outside events.
+ * @param {(event: PointerDownOutsideEvent | FocusOutsideEvent) => void} [props.onInteractOutside] - Callback for any interaction outside events.
+ * @param {() => void} [props.onDismiss] - Callback when the DismissableLayer should be dismissed.
+ * @returns {React.ReactElement | null} The rendered DismissableLayer or `null` if not present.
+ */
 const DismissableLayer = React.forwardRef<
   DismissableLayerElement,
   DismissableLayerProps
@@ -226,6 +261,16 @@ const BRANCH_NAME = 'DismissableLayerBranch';
 type DismissableLayerBranchElement = React.ElementRef<typeof Primitive.div>;
 type DismissableLayerBranchProps = PrimitiveDivProps;
 
+/**
+ * DismissableLayerBranch component that creates an exception within a DismissableLayer,
+ * allowing certain elements to not trigger the layer's dismissal despite being outside
+ * the physical DOM structure of the layer. Useful for dropdowns, tooltips, etc.,
+ * where a related element should not cause the layer to dismiss when interacted with.
+ *
+ * @component
+ * @param {DismissableLayerBranchProps} props - The props for the DismissableLayerBranch component.
+ * @returns {React.ReactElement} The rendered DismissableLayerBranch.
+ */
 const DismissableLayerBranch = React.forwardRef<
   DismissableLayerBranchElement,
   DismissableLayerBranchProps

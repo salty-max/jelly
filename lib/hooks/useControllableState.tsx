@@ -28,7 +28,20 @@ function useUncontrolledState<T>({
   return uncontrolledState;
 }
 
-export function useControllableState<T>({
+/**
+ * A hook for managing a state value that can be either controlled or uncontrolled.
+ * This hook allows a component to support receiving a state value as a prop (controlled)
+ * or managing its own state (uncontrolled), with changes to the state being reported through
+ * an `onChange` callback.
+ *
+ * @template T The type of the state.
+ * @param {UseControllableStateParams<T>} params - Parameters for the hook.
+ * @param {T | undefined} params.prop - The controlled state value passed in as a prop. If undefined, the state is uncontrolled.
+ * @param {T | undefined} params.defaultProp - The default value for the state when uncontrolled.
+ * @param {(state: T) => void} [params.onChange] - A callback function called with the new state value whenever it changes.
+ * @returns {[T | undefined, React.Dispatch<React.SetStateAction<T | undefined>>]} A stateful value and a function to update it.
+ */
+function useControllableState<T>({
   prop,
   defaultProp,
   onChange = () => {},
@@ -58,3 +71,5 @@ export function useControllableState<T>({
 
   return [value, setValue] as const;
 }
+
+export { useControllableState };

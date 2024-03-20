@@ -1,3 +1,12 @@
+/**
+ * The Presence component and hook offer a way to manage the presence of components
+ * in the DOM with support for CSS animations. It allows components to be conditionally
+ * rendered based on the `present` prop while handling enter and exit animations
+ * gracefully. This file defines a `Presence` component that can accept either a React
+ * element or a render function as children. It utilizes a custom `usePresence` hook
+ * to track the presence state and manage animations, ensuring components mount and
+ * unmount at the appropriate times during animation sequences.
+ */
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { useComposedRefs } from '../../common/utils';
@@ -10,6 +19,18 @@ interface PresenceProps {
     | ((props: { present: boolean }) => React.ReactElement);
   present: boolean;
 }
+
+/**
+ * A component that conditionally renders its children based on the `present` prop.
+ * It supports animations for entering and exiting states by managing a presence state
+ * internally. When children are functions, they receive an object with a `present` boolean
+ * indicating the current presence state.
+ *
+ * @param {PresenceProps} props - The props for the Presence component.
+ * @param {React.ReactElement | ((props: { present: boolean }) => React.ReactElement)} props.children - The children to render, which can be a React element or a function returning a React element.
+ * @param {boolean} props.present - A boolean flag indicating whether the component should be considered present.
+ * @returns {React.ReactElement | null} The rendered children based on the presence state, or `null` if not present.
+ */
 
 const Presence: React.FC<PresenceProps> = ({ children, present }) => {
   const presence = usePresence(present);
@@ -27,6 +48,14 @@ const Presence: React.FC<PresenceProps> = ({ children, present }) => {
     : null;
 };
 
+/**
+ * A hook that manages the presence state of a component, supporting enter and exit animations.
+ * It tracks the component's mount state and listens for CSS animation events to transition
+ * between states.
+ *
+ * @param {boolean} present - A boolean flag indicating the desired presence state.
+ * @returns {object} An object containing the `isPresent` state and a `ref` callback to be attached to the component.
+ */
 const usePresence = (present: boolean) => {
   const [node, setNode] = React.useState<HTMLElement>();
   const stylesRef = React.useRef<CSSStyleDeclaration>({} as any);

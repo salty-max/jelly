@@ -64,6 +64,7 @@ module.exports = {
     'react/jsx-no-bind': 'off',
     'react/jsx-curly-newline': 'off',
     'react/no-array-index-key': 'off',
+    'react/no-this-in-sfc': 'off',
     'import/prefer-default-export': 'off',
     'import/no-extraneous-dependencies': 'off',
     'import/no-cycle': 'off',
@@ -85,6 +86,7 @@ module.exports = {
     'no-void': 'off',
     'nonblock-statement-body-position': 'off',
     'class-methods-use-this': 'off',
+    'max-len': 'off',
     curly: 'off',
   },
 };

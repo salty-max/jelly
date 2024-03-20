@@ -1,4 +1,4 @@
-import { describe } from 'vitest';
+import { expect, it, describe } from 'vitest';
 import { render, screen } from '@testing-library/react';
 import { Button } from './Button';
 
@@ -41,7 +41,14 @@ describe('Button', () => {
       </Button>,
     );
 
-    expect(screen.getByText('Click me')).toBeInTheDocument();
+    const anchorElement = screen.getByRole('link', { name: /click me/i });
+    expect(anchorElement).toBeInTheDocument();
+    expect(anchorElement).toHaveAttribute(
+      'href',
+      'https://github.com/salty-max/jelly',
+    );
+    expect(anchorElement).toHaveAttribute('target', '_blank');
+    expect(anchorElement).toHaveAttribute('rel', 'noreferrer');
   });
 
   it('renders correctly with specific size', () => {

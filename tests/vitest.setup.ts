@@ -1,3 +1,4 @@
+import 'vitest-canvas-mock';
 import 'vitest-axe/extend-expect';
 import { expect } from 'vitest';
 import * as jestDOMMatchers from '@testing-library/jest-dom/matchers';
